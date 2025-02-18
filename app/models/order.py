@@ -19,12 +19,12 @@ class Order(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.user_id')), nullable=False)
     total = db.Column(db.Numeric(10, 2), nullable=False)
     order_status = db.Column(db.Enum(StatusType), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.now())
-    updated_at = db.Column(db.DateTime, default=datetime.datetime.now(), onupdate=datetime.datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
     user = db.relationship('User', back_populates='orders')
-    order_items = db.relationship('OrderItem', back_populates='order', lazy=True)
+    order_items = db.relationship('OrderItem', back_populates='order')
 
     def to_dict(self):
         return {

@@ -12,8 +12,8 @@ class OrderItem(db.Model):
     item_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('items.item_id')),nullable=False)
     quantity = db.Column(db.Integer, default=1, nullable=False)
     price = db.Column(db.Numeric(10, 2), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.now())
-    updated_at = db.Column(db.DateTime, default=datetime.datetime.now(), onupdate=datetime.datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
     order = db.relationship('Order', back_populates='order_items')

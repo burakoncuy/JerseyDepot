@@ -40,14 +40,14 @@ class Item(db.Model):
     image_url = db.Column(db.String(255), nullable=False)
     size = db.Column(db.Enum(SizeType), nullable=False)
     status = db.Column(db.Enum(StatusType), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.now())
-    updated_at = db.Column(db.DateTime, default=datetime.datetime.now(), onupdate=datetime.datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
-    cart_items = db.relationship('Cart', back_populate='item')
-    favorites = db.relationship('Favorite', back_populate='item')
-    reviews = db.relationship('Review', back_populate='item')
-    order_items = db.relationship('OrderItem', back_populate='item')
+    cart_items = db.relationship('Cart', back_populates='item')
+    favorites = db.relationship('Favorite', back_populates='item')
+    reviews = db.relationship('Review', back_populates='item')
+    order_items = db.relationship('OrderItem', back_populates='item')   
 
     def to_dict(self):
         return {
