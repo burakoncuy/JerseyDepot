@@ -49,7 +49,8 @@ class Item(db.Model):
     favorites = db.relationship('Favorite', back_populates='item')
     reviews = db.relationship('Review', back_populates='item')
     order_items = db.relationship('OrderItem', back_populates='item')   
-
+    user = db.relationship('User', back_populates='items')
+    
     def to_dict(self):
         return {
             'id': self.id,
