@@ -41,8 +41,7 @@ class Item(db.Model):
     size = db.Column(db.Enum(SizeType), nullable=False)
     status = db.Column(db.Enum(StatusType), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now())
-    updated_at = db.Column(db.DateTime, default=datetime.datetime.now(), onupdate=datetime.datetime.now()
-    )
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now(), onupdate=datetime.datetime.now())
 
     # Relationships
     cart_items = db.relationship('Cart', back_populate='item')

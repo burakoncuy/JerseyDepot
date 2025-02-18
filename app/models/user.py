@@ -14,7 +14,7 @@ class User(db.Model,UserMixin):
     email = db.Column(db.String(255), nullable=False, unique=True)
     password_hash = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.datetime.now())
-    updated_at = db.Column(db.DateTime, default=datetime.datetime.now(), onupdate=datetime.datetime.now())
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now(), onupdate=datetime.now())
 
     # Relationships
     items = db.relationship('Item', back_populate='user')
@@ -41,4 +41,6 @@ class User(db.Model,UserMixin):
             'user_id': self.user_id,
             'username': self.username,
             'email': self.email,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
         }
