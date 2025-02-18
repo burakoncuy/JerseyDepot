@@ -2,6 +2,8 @@ from .db import db, environment, SCHEMA, add_prefix_for_prod
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 import datetime
+from datetime import datetime
+
 
 class User(db.Model,UserMixin):
     __tablename__ = 'users'
@@ -9,7 +11,7 @@ class User(db.Model,UserMixin):
     if environment == "production":
         __table_args__ = {'schema': SCHEMA}
 
-    user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(255), nullable=False, unique=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
     password_hash = db.Column(db.String(255), nullable=False)
@@ -37,7 +39,7 @@ class User(db.Model,UserMixin):
     
     def to_dict(self):
         return {
-            'user_id': self.user_id,
+            'id': self.id,
             'username': self.username,
             'email': self.email,
             "created_at": self.created_at,

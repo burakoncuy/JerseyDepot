@@ -1,5 +1,6 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 import datetime
+from datetime import datetime
 
 
 class Cart(db.Model):
@@ -8,9 +9,9 @@ class Cart(db.Model):
     if environment == "production":
         __table_args__ = {"schema": SCHEMA}
 
-    cart_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.user_id')), nullable=False)
-    item_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('items.item_id')), nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
+    item_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('items.id')), nullable=False)
     quantity = db.Column(db.Integer, default=1, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -21,7 +22,7 @@ class Cart(db.Model):
 
     def to_dict(self):
         return {
-            'cart_id': self.cart_id,
+            'id': self.id,
             'user_id': self.user_id,
             'item_id': self.item_id,
             'quantity': self.quantity,

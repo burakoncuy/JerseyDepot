@@ -1,5 +1,6 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 import datetime
+from datetime import datetime
 
 class Review(db.Model):
     __tablename__ = 'reviews'
@@ -7,9 +8,9 @@ class Review(db.Model):
     if environment == "production":
         __table_args__ = {"schema": SCHEMA}
 
-    review_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.user_id')),nullable=False)
-    item_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('items.item_id')),nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')),nullable=False)
+    item_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('items.id')),nullable=False)
     rating = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -21,7 +22,7 @@ class Review(db.Model):
 
     def to_dict(self):
         return {
-            'review_id': self.review_id,
+            'id': self.id,
             'user_id': self.user_id,
             'item_id': self.item_id,
             'rating': self.rating,

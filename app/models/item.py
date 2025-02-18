@@ -1,6 +1,7 @@
 from .db import db, environment, SCHEMA, add_prefix_for_prod
 import datetime
 from enum import Enum
+from datetime import datetime
 
 class CategoryType(Enum):
     SOCCER = "SOCCER"
@@ -19,7 +20,7 @@ class SizeType(Enum):
     XL = "XL"
     XX = "XXL"
 
-class StatusType(Enum):
+class ItemStatusType(Enum):
     AVAILABLE = "AVAILABLE"
     SOLD = "SOLD"
 
@@ -30,8 +31,8 @@ class Item(db.Model):
     if environment == "production":
         __table_args__ = {"schema": SCHEMA}
 
-    item_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.user_id')), nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
     name = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text)
     price = db.Column(db.Numeric(10, 2), nullable=False)
@@ -39,7 +40,7 @@ class Item(db.Model):
     condition = db.Column(db.Enum(ConditionType), nullable=False)
     image_url = db.Column(db.String(255), nullable=False)
     size = db.Column(db.Enum(SizeType), nullable=False)
-    status = db.Column(db.Enum(StatusType), nullable=False)
+    item_status = db.Column(db.Enum(ItemStatusType), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -51,7 +52,7 @@ class Item(db.Model):
 
     def to_dict(self):
         return {
-            'item_id': self.item_id,
+            'id': self.id,
             'user_id': self.user_id,
             'name': self.name,
             'description': self.description,
@@ -60,7 +61,7 @@ class Item(db.Model):
             'condition': self.condition.value if self.condition else None,
             'image_url': self.image_url,
             'size': self.size.value if self.size else None,
-            'status': self.status.value if self.status else None,
+            'item_status': self.item_status.value if self.item_status else None,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }
