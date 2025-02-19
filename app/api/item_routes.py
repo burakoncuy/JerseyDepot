@@ -1,21 +1,26 @@
 from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
 from ..models.item import Item, ItemStatusType, CategoryType, ConditionType, SizeType
+from ..models.favorite import Favorite
+from ..models.review import Review 
+from ..models.order import Order, OrderStatusType
+from ..models.order_item import OrderItem
 from ..models.db import db
 from datetime import datetime
 from ..forms.item_form import ItemForm
+from ..forms.review_form import ReviewForm
 
 item_routes = Blueprint("items", __name__)
 
 
-#Get all items
+##Get all items
 @item_routes.route("/", methods=["GET"])
 def get_items():
     items= [items.to_dict() for items in Item.query.all()]
     return items
 
 
-#Get a specific item
+##Get a specific item
 @item_routes.route("/<int:id>", methods=["GET"])
 def get_item(id):
     item=Item.query.get(id)
@@ -23,9 +28,19 @@ def get_item(id):
         return item.to_dict()
     else:
         return {"message": "Item not found"},404
-    
 
-#Create a new item
+
+##Get items owned by current user
+@item_routes.route("/current", methods=["GET"])
+@login_required
+def get_current_user_items():
+    items=Item.query.filter(Item.user_id == current_user.id).all()
+    if not items:
+        return {"message": "not item found"}
+    items_list=[item.to_dict() for item in items]
+    return {"items": items_list}
+
+##Create a new item
 @item_routes.route("/new", methods=["POST"])
 @login_required  # Ensures user must be logged in
 def create_item():
@@ -50,7 +65,7 @@ def create_item():
     return {"errors": form.errors}, 400
 
 
-#Update an item
+##Update an item
 @item_routes.route("/<int:id>/update" , methods=["PUT"])
 @login_required
 def update_item(id):
@@ -98,3 +113,113 @@ def delete_item(id):
     db.session.commit()
 
     return {"message": "item successfully deleted"}
+
+
+
+
+## Add item to favorites
+@item_routes.route("/<int:id>/add-to-favorite", methods=["POST"])
+@login_required
+def add_to_favorite(id):
+    item = Item.query.get(id)
+
+    if not item:
+        return {"message": "Item not found"}, 404
+
+    # Check if the favorite entry already exists
+    existing_favorite = Favorite.query.filter_by(user_id=current_user.id, id=item.id).first()
+    if existing_favorite:
+        return {"message": "Item is already in favorites"}, 400
+
+    # Create and add the favorite entry
+    favorite = Favorite(user_id=current_user.id, id=item.id)
+    db.session.add(favorite)
+    db.session.commit()
+
+    return favorite.to_dict(), 201  # Return the newly created favorite
+
+
+
+
+## Get favorite items
+@item_routes.route("/favorites", methods=["GET"])
+@login_required
+def get_favorites():
+    user = current_user
+
+    # Query favorite items by joining with the Item table
+    favorite_items = [fav.item.to_dict() for fav in user.favorites]
+
+    return jsonify(favorite_items)
+
+
+## Remove item from favorites
+@item_routes.route("/<int:id>/remove-from-favorite", methods=["DELETE"])
+@login_required
+def remove_from_favorite(id):
+    item = Item.query.get(id)
+
+    if not item:
+        return {"message": "Item not found"}, 404
+
+    # Find the favorite entry
+    favorite = Favorite.query.filter_by(user_id=current_user.id, id=item.id).first()
+
+    if not favorite:
+        return {"message": "Item is not in favorites"}, 400
+
+    # Remove from favorites
+    db.session.delete(favorite)
+    db.session.commit()
+
+    return {"message": "Item removed from favorites"}, 200
+
+
+
+
+## Get reviews for an item
+@item_routes.route("/<int:id>/reviews", methods=["GET"])
+def get_reviews(id):
+    reviews = Review.query.filter_by(id=id).all()
+    if not reviews:
+        return {"message": "no review yet"}
+    
+    return jsonify([review.to_dict() for review in reviews]), 200
+
+
+
+## Add a review (only if user has ordered the item)
+@item_routes.route("/<int:id>/reviews", methods=["POST"])
+@login_required
+def add_review(id):
+    form = ReviewForm()
+    form['csrf_token'].data = request.cookies.get('csrf_token', '')
+
+    if form.validate_on_submit():
+        # Check if item exists
+        item = Item.query.get(id)
+        if not item:
+            return {"message": "Item not found"}, 404
+
+        # Check if the user has ordered this item
+        ordered_item = OrderItem.query.join(Item).filter(
+            OrderItem.item_id == id,  
+            OrderItem.order.has(user_id=current_user.id)
+        ).first()
+
+        if not ordered_item:
+            return {"message": "You can only review items you have ordered"}, 403
+
+        # Create a new review
+        new_review = Review(
+            user_id=current_user.id,
+            item_id=id,  
+            rating=form.rating.data,
+            comment=form.comment.data
+        )
+        db.session.add(new_review)
+        db.session.commit()
+
+        return new_review.to_dict(), 201
+    else:
+        return jsonify(form.errors), 400
