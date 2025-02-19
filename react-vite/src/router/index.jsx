@@ -4,6 +4,7 @@ import SignupFormPage from '../components/SignupFormPage';
 import ItemList from '../components/ItemList/ItemList';
 import ItemDetail from '../components/ItemDetail';
 import ItemCreate from '../components/ItemCreate/ItemCreate';
+import ItemUpdate from '../components/ItemUpdate/ItemUpdate';
 import Layout from './Layout';
 
 export const router = createBrowserRouter([
@@ -33,6 +34,10 @@ export const router = createBrowserRouter([
       {
         path: "items/new",
         element: <ItemCreate />,
+      },
+      {
+        path: "items/:id/update",
+        element: <ItemUpdate />,
       },
     ],
   },

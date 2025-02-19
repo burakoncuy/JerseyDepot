@@ -112,8 +112,7 @@ export const deleteItem = (id) => async (dispatch) => {
 
  // REDUCER
 
- // reducers/itemsReducer.js
-
+ // initial state
 const initialState = {
   allItems: [],
   currentItem: null,
