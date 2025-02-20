@@ -118,26 +118,31 @@ def delete_item(id):
 
 
 ## Add item to favorites
-@item_routes.route("/<int:id>/add-to-favorite", methods=["POST"])
+@item_routes.route("/<int:item_id>/add-to-favorite", methods=["POST"])
 @login_required
-def add_to_favorite(id):
-    item = Item.query.get(id)
+def add_to_favorite(item_id):
+    # Fetch the item by ID
+    item = Item.query.get(item_id)
 
     if not item:
         return {"message": "Item not found"}, 404
 
     # Check if the favorite entry already exists
-    existing_favorite = Favorite.query.filter_by(user_id=current_user.id, id=item.id).first()
+    existing_favorite = Favorite.query.filter_by(user_id=current_user.id, item_id=item_id).first()
     if existing_favorite:
         return {"message": "Item is already in favorites"}, 400
 
     # Create and add the favorite entry
-    favorite = Favorite(user_id=current_user.id, id=item.id)
+    favorite = Favorite(
+        user_id=current_user.id,
+        item_id=item_id,  # Ensure item_id is correctly set
+        created_at=datetime.utcnow(),
+        updated_at=datetime.utcnow()
+    )
     db.session.add(favorite)
     db.session.commit()
 
     return favorite.to_dict(), 201  # Return the newly created favorite
-
 
 
 
@@ -153,27 +158,20 @@ def get_favorites():
     return jsonify(favorite_items)
 
 
-## Remove item from favorites
-@item_routes.route("/<int:id>/remove-from-favorite", methods=["DELETE"])
+@item_routes.route("/<int:item_id>/remove-from-favorite", methods=["DELETE"])
 @login_required
-def remove_from_favorite(id):
-    item = Item.query.get(id)
-
-    if not item:
-        return {"message": "Item not found"}, 404
-
-    # Find the favorite entry
-    favorite = Favorite.query.filter_by(user_id=current_user.id, id=item.id).first()
+def remove_from_favorite(item_id):
+    # Fetch the favorite entry for the current user and item
+    favorite = Favorite.query.filter_by(user_id=current_user.id, item_id=item_id).first()
 
     if not favorite:
         return {"message": "Item is not in favorites"}, 400
 
-    # Remove from favorites
+    # Remove the favorite entry
     db.session.delete(favorite)
     db.session.commit()
 
     return {"message": "Item removed from favorites"}, 200
-
 
 
 
