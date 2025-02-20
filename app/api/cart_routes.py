@@ -18,8 +18,14 @@ def view_cart():
     if not cart_items:
         return {"message": "Your cart is empty."}, 200
 
-    # Return the cart items in JSON format
-    return jsonify([item.to_dict() for item in cart_items]), 200
+    # Include the associated item data in the response
+    cart_items_with_items = []
+    for cart_item in cart_items:
+        cart_item_dict = cart_item.to_dict()
+        cart_item_dict['item'] = cart_item.item.to_dict()  # Include the item data
+        cart_items_with_items.append(cart_item_dict)
+
+    return jsonify(cart_items_with_items), 200
 
 
 ## Add item to the cart

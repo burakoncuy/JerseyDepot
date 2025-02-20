@@ -17,11 +17,11 @@ def view_orders():
     orders = Order.query.filter_by(user_id=current_user.id).all()
 
     if not orders:
-        return {"message": "No orders found."}, 404
+        return jsonify([]), 200  # Return an empty array if no orders are found
+
 
     # Return the orders in JSON format
     return jsonify([order.to_dict() for order in orders]), 200
-
 
 
 ## View Order Details

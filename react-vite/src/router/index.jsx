@@ -8,6 +8,13 @@ import ItemUpdate from '../components/ItemUpdate/ItemUpdate';
 import ItemDelete from '../components/ItemDelete';
 import ItemCurrent from '../components/ItemCurrent';
 import Favorite from '../components/Favorite/Favorite';
+import ReviewList from '../components/ReviewList';
+import AddReviewForm from '../components/ReviewAdd';
+import ReviewUpdate from '../components/ReviewUpdate';
+import ReviewDelete from '../components/ReviewDelete';
+import HomePage from '../components/HomePage/HomePage';
+import OrderList from '../components/Order/Order';
+import Cart from '../components/Cart';
 import Layout from './Layout';
 
 export const router = createBrowserRouter([
@@ -16,7 +23,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <h1>NOW JERSEY app is loading!</h1>,
+        element: <HomePage />,
       },
       {
         path: "login",
@@ -53,6 +60,30 @@ export const router = createBrowserRouter([
       {
         path: "items/favorites",
         element: <Favorite />,
+      },
+      {
+        path: "reviews",
+        element: <ReviewList />,
+      },
+      {
+        path: "items/id/review",
+        element: <AddReviewForm />,
+      },
+      {
+        path: "reviews/:id/update",
+        element: <ReviewUpdate />,
+      },
+      {
+        path: "reviews/:id/delete",
+        element: <ReviewDelete />,
+      },
+      {
+        path: "orders",
+        element: <OrderList />,
+      },
+      {
+        path: "cart",
+        element: <Cart />,
       },
     ],
   },
