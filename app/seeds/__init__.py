@@ -23,8 +23,8 @@ def seed():
         # Make sure to add all your other model's undo functions below
         
         undo_reviews()
-        undo_orders()
         undo_order_items()
+        undo_orders() 
         undo_carts()
         undo_favorites()
         undo_items()
@@ -33,8 +33,8 @@ def seed():
     seed_items()
     seed_favorites()
     seed_carts()
-    seed_order_items()
     seed_orders()
+    seed_order_items()
     seed_reviews()
    
     # Add other seed functions here
@@ -44,8 +44,8 @@ def seed():
 @seed_commands.command('undo')
 def undo():
     undo_reviews()
-    undo_orders()
     undo_order_items()
+    undo_orders()
     undo_carts()
     undo_favorites()
     undo_items()
