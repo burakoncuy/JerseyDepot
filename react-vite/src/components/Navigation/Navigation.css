@@ -1,3 +1,157 @@
 .profile-dropdown {
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  justify-content: flex-end;
   position: absolute;
+  border-radius: 5px;
+  padding: 15px;
+  right: 200px;
+  top: 50px;
+  color: #333;
+  font-size: 14px;
+  line-height: 1.5;
+  border-radius: 12px;
+}
+.profile-dropdown button {
+  background-color: #4a90e2; 
+  color: white;
+  border: none; 
+  padding: 8px 15px; 
+  border-radius: 4px; 
+  cursor: pointer; 
+  margin-top: 10px;
+}
+
+.profile-dropdown button:hover {
+  background-color: #357ab8;
+}
+
+.profile-dropdown .logout-button:hover {
+  background-color: #357ab8; 
+}
+
+
+.profile-dropdown > li{
+  list-style: none;
+}
+
+
+.fa-car {
+  position: absolute;
+  font-size: 20px; /* Larger car icon */
+  padding-left: 180px;
+
+}
+
+
+
+.profile-buttton {
+  border-radius: 40px;
+  padding: 5px 8px;
+  background-color: rgb(238, 227, 238);
+  cursor: pointer;
+}
+.profile-buttton:hover {
+
+  background-color: rgb(206, 185, 206);
+
+}
+
+
+
+
+
+
+.main-div { 
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.second-sub-main { 
+display: flex;
+flex-direction: row;
+align-items: center;
+gap: 40px;
+margin-right: 150px;
+}
+
+.main-div a { 
+  text-decoration: none;
+  font-size: 19px;
+  color: #4B0082; 
+}
+
+.main-div a:hover { 
+  color: #008080;
+}
+
+
+
+/* 
+
+.heart-icon {
+  color: red; 
+  font-size: 25px;
+  transition: color 0.3s;
+}
+
+.heart-icon:hover {
+  color: darkred; 
+} */
+
+
+
+@media (max-width: 768px) {
+  .main-div, .second-sub-main {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .second-sub-main {
+    margin-right: 0;
+    gap: 20px;
+  }
+}
+
+.main-div a { 
+  text-decoration: none;
+  font-size: 19px;
+  color: #4B0082; 
+}
+
+.main-div a:hover { 
+  color: #008080;
+}
+
+
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
+
+
+.nav-bar {
+  background-color: #0F52BA; 
+  padding: 30px;
+}
+
+
+
+.nav-bar a {
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+.nav-bar a:hover { 
+  color: blue;
 }

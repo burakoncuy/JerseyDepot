@@ -13,6 +13,7 @@ import AddReviewForm from '../components/ReviewAdd';
 import ReviewUpdate from '../components/ReviewUpdate';
 import ReviewDelete from '../components/ReviewDelete';
 import LandingPage from '../components/LandingPage';
+// import HomePage from '../components/HomePage';
 import OrderList from '../components/Order/Order';
 import Cart from '../components/Cart';
 import Layout from './Layout';
@@ -25,6 +26,11 @@ export const router = createBrowserRouter([
         path: "/",
         element: <LandingPage/>,
       },
+      // {
+      //   path: "home",
+      //   element: <HomePage/>,
+      // },
+
       {
         path: "login",
         element: <LoginFormPage />,
@@ -66,7 +72,7 @@ export const router = createBrowserRouter([
         element: <ReviewList />,
       },
       {
-        path: "items/id/review",
+        path: "items/:id/reviews",
         element: <AddReviewForm />,
       },
       {

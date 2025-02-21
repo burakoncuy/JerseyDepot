@@ -186,7 +186,7 @@ def get_reviews(id):
 
 
 
-## Add a review (only if user has ordered the item)
+## Add a review 
 @item_routes.route("/<int:id>/reviews", methods=["POST"])
 @login_required
 def add_review(id):
@@ -199,19 +199,10 @@ def add_review(id):
         if not item:
             return {"message": "Item not found"}, 404
 
-        # Check if the user has ordered this item
-        ordered_item = OrderItem.query.join(Item).filter(
-            OrderItem.item_id == id,  
-            OrderItem.order.has(user_id=current_user.id)
-        ).first()
-
-        if not ordered_item:
-            return {"message": "You can only review items you have ordered"}, 403
-
-        # Create a new review
+        # Create a new review (no order check required)
         new_review = Review(
             user_id=current_user.id,
-            item_id=id,  
+            item_id=id,
             rating=form.rating.data,
             comment=form.comment.data
         )

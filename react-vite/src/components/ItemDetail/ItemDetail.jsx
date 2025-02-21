@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom'; // Import useParams
+import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate
 import { getItem } from '../../redux/items';
 import { addToFavorites } from '../../redux/favorite';
 
 const ItemDetail = () => {
   const dispatch = useDispatch();
-  const { id } = useParams(); // Use useParams to get the `id` parameter
+  const { id } = useParams(); // Get the `id` parameter from the URL
+  const navigate = useNavigate(); // Hook for navigation
   const { item, notFound, error } = useSelector(state => state.items);
 
   useEffect(() => {
@@ -21,6 +22,10 @@ const ItemDetail = () => {
     })
       .then(() => dispatch(addToFavorites(item)))
       .catch((error) => console.error('Error adding to favorites:', error));
+  };
+
+  const handleAddReview = () => {
+    navigate(`/items/${item.id}/reviews`); // Redirect to the Add Review component
   };
 
   if (notFound) {
@@ -45,7 +50,12 @@ const ItemDetail = () => {
       <p>Size: {item.size}</p>
       <p>Status: {item.item_status}</p>
       <img src={item.image_url} alt={item.name} />
+
+      {/* Add to Favorites Button */}
       <button onClick={handleAddToFavorites}>Add to Favorites</button>
+
+      {/* Add Review Button */}
+      <button onClick={handleAddReview}>Add Review</button>
     </div>
   );
 };
