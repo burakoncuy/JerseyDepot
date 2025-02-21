@@ -25,13 +25,13 @@ const ItemList = () => {
       <ul className="item-list-grid">
         {items.map((item) => (
           <li key={item.id} className="item-card">
-            {/* Make image clickable and navigate to item details */}
+            {/* Make image clickable only if user is logged in */}
             <img
               src={item.image_url}
               alt={item.name}
               className="item-image"
-              onClick={() => handleItemClick(item.id)}
-              style={{ cursor: 'pointer' }} // Indicate clickable behavior
+              onClick={() => user && handleItemClick(item.id)} // Check if user is logged in
+              style={{ cursor: user ? 'pointer' : 'default' }} // Change cursor to default if not logged in
             />
             <div className="item-details">
               <h3 className="item-name">{item.name}</h3>
