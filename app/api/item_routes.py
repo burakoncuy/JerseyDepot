@@ -101,19 +101,21 @@ def update_item(id):
 @item_routes.route("/<int:id>/delete", methods=["DELETE"])
 @login_required
 def delete_item(id):
-    item=Item.query.get(id)
+    item = Item.query.get(id)
 
     if not item:
         return {"errors": ["item not found"]}, 404
 
-    if(current_user.id != item.user_id):
+    if current_user.id != item.user_id:
         return {"error": "Unauthorized to delete this item"}, 403
+    
+     # Delete related favorites
+    Favorite.query.filter(Favorite.item_id == id).delete()
     
     db.session.delete(item)
     db.session.commit()
 
     return {"message": "item successfully deleted"}
-
 
 
 

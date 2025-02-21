@@ -7,8 +7,8 @@ const ItemDelete = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const item = useSelector(state => state.items.currentItem); // Access currentItem
-    const notFound = useSelector(state => state.items.notFound); // Access notFound state
+    const item = useSelector(state => state.items.item); // Corrected: Use `item` instead of `currentItem`
+    const notFound = useSelector(state => state.items.notFound); // Corrected: Use `notFound`
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -32,8 +32,14 @@ const ItemDelete = () => {
 
     const handleDelete = async () => {
         if (window.confirm("Are you sure you want to delete this item?")) {
-            await dispatch(deleteItem(id));
-            navigate("/items");
+            try {
+                const result = await dispatch(deleteItem(id)); // Dispatch delete action
+                console.log("Delete result:", result); // Debugging
+                navigate("/items"); // Redirect after successful deletion
+            } catch (err) {
+                console.error("Failed to delete item:", err); // Debugging
+                setError("Failed to delete item");
+            }
         }
     };
 

@@ -99,14 +99,16 @@ export const createItem = (itemData) => async (dispatch) => {
 
 // Delete an item
 export const deleteItem = (id) => async (dispatch) => {
-    try {
-      const res = await fetch(`/api/items/${id}/delete`, { method: 'DELETE' });
-      const data = await res.json();
-      dispatch({ type: DELETE_ITEM, payload: id });
-    } catch (err) {
-      console.error("Error deleting item:", err);
-    }
-  };
+  try {
+    const res = await fetch(`/api/items/${id}/delete`, { method: 'DELETE' });
+    const data = await res.json();
+    dispatch({ type: DELETE_ITEM, payload: id }); // Ensure the payload is the item ID
+    return data; // Return the response data for further handling
+  } catch (err) {
+    console.error("Error deleting item:", err);
+    throw err; // Throw the error to handle it in the component
+  }
+};
 
 
 
@@ -160,11 +162,11 @@ const itemsReducer = (state = initialState, action) => {
       };
     
     case DELETE_ITEM:
-      return {
-        ...state,
-        allItems: state.allItems.filter((item) => item.id !== action.payload),
-        userItems: state.userItems.filter((item) => item.id !== action.payload),
-      };
+        return {
+          ...state,
+          allItems: state.allItems.filter((item) => item.id !== action.payload),
+          userItems: state.userItems.filter((item) => item.id !== action.payload),
+        };
     
     default:
       return state;

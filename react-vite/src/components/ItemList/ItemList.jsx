@@ -1,19 +1,23 @@
-import React, { useEffect , useState} from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { getItems } from '../../redux/items';
-// import { addToCart ,fetchCart } from '../../redux/cart';
-// import { useLocation, useNavigate } from "react-router-dom"
-// import { addToFavorites, removeFromFavorites, getFavorites } from '../../redux/favorite';
-// import { FaRegHeart, FaHeart } from "react-icons/fa";
 import './ItemList.css'; // Import the CSS file
 
 const ItemList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const items = useSelector((state) => state.items.allItems);
+  const user = useSelector((state) => state.session?.user); // Ensure optional chaining for safety
 
   useEffect(() => {
     dispatch(getItems());
   }, [dispatch]);
+
+  // Function to navigate to item details page
+  const handleItemClick = (itemId) => {
+    navigate(`/items/${itemId}`);
+  };
 
   return (
     <div className="item-list-container">
@@ -21,15 +25,18 @@ const ItemList = () => {
       <ul className="item-list-grid">
         {items.map((item) => (
           <li key={item.id} className="item-card">
+            {/* Make image clickable and navigate to item details */}
             <img
-              src={item.image_url} // Ensure your item data includes an image_url field
+              src={item.image_url}
               alt={item.name}
               className="item-image"
+              onClick={() => handleItemClick(item.id)}
+              style={{ cursor: 'pointer' }} // Indicate clickable behavior
             />
             <div className="item-details">
               <h3 className="item-name">{item.name}</h3>
               <p className="item-price">${item.price}</p>
-              <button className="add-to-cart-button">Add to Cart</button>
+              {user && <button className="add-to-cart-button">Add to Cart</button>}
             </div>
           </li>
         ))}

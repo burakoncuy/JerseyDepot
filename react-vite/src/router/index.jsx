@@ -12,6 +12,7 @@ import ReviewList from '../components/ReviewList';
 import AddReviewForm from '../components/ReviewAdd';
 import ReviewUpdate from '../components/ReviewUpdate';
 import ReviewDelete from '../components/ReviewDelete';
+import ReviewByCurrentUser from '../components/ReviewByCurrentUser';
 import LandingPage from '../components/LandingPage';
 // import HomePage from '../components/HomePage';
 import OrderList from '../components/Order/Order';
@@ -70,6 +71,10 @@ export const router = createBrowserRouter([
       {
         path: "reviews",
         element: <ReviewList />,
+      },
+      {
+        path: "reviews/current",
+        element: <ReviewByCurrentUser />,
       },
       {
         path: "items/:id/reviews",

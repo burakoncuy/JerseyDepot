@@ -17,6 +17,16 @@ export const fetchReviews = () => async (dispatch) => {
       console.error('Error fetching reviews:', error);
     }
   };
+
+  export const fetchCurrentUserReviews = () => async (dispatch) => {
+    try {
+      const response = await fetch('/api/reviews/current', { method: 'GET' });
+      const reviews = await response.json();
+      dispatch({ type: FETCH_REVIEWS, payload: reviews });
+    } catch (error) {
+      console.error('Error fetching current user reviews:', error);
+    }
+  };
   
   export const addReview = (itemId, reviewData) => async (dispatch) => {
     try {
