@@ -12,7 +12,7 @@ import ReviewList from '../components/ReviewList';
 import AddReviewForm from '../components/ReviewAdd';
 import ReviewUpdate from '../components/ReviewUpdate';
 import ReviewDelete from '../components/ReviewDelete';
-import HomePage from '../components/HomePage/HomePage';
+import LandingPage from '../components/LandingPage';
 import OrderList from '../components/Order/Order';
 import Cart from '../components/Cart';
 import Layout from './Layout';
@@ -23,7 +23,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <HomePage />,
+        element: <LandingPage/>,
       },
       {
         path: "login",

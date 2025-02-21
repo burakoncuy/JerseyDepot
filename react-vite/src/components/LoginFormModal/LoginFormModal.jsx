@@ -2,6 +2,10 @@ import { useState } from "react";
 import { thunkLogin } from "../../redux/session";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
+import { fetchCart } from "../../redux/cart";
+import { getFavorites } from "../../redux/favorite";
+import { useNavigate } from "react-router-dom";
+
 import "./LoginForm.css";
 
 function LoginFormModal() {
@@ -10,6 +14,7 @@ function LoginFormModal() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,13 +29,40 @@ function LoginFormModal() {
     if (serverResponse) {
       setErrors(serverResponse);
     } else {
+      await dispatch(fetchCart())
+      await dispatch(getFavorites())
+      navigate('/items')
       closeModal();
     }
   };
 
+  const demoUser = async (e) =>{ 
+    e.preventDefault()
+
+    const serverResponse = await dispatch(
+      thunkLogin({
+        email: "demo@aa.io",
+        password: "password"
+      }))
+      if (serverResponse) { 
+        setErrors(serverResponse)
+      }else {
+        await dispatch(fetchCart())
+        await dispatch(getFavorites())
+
+        navigate('/items')
+        closeModal()
+      }
+  }
+
   return (
-    <>
+    <div className="main-login">
       <h1>Log In</h1>
+      <div>
+      {errors.email && <p className="error-mesa">{errors.email}</p>}
+      {errors.password && <p className="error-mes">{errors.password}</p>}
+      </div>
+
       <form onSubmit={handleSubmit}>
         <label>
           Email
@@ -41,7 +73,6 @@ function LoginFormModal() {
             required
           />
         </label>
-        {errors.email && <p>{errors.email}</p>}
         <label>
           Password
           <input
@@ -51,10 +82,10 @@ function LoginFormModal() {
             required
           />
         </label>
-        {errors.password && <p>{errors.password}</p>}
         <button type="submit">Log In</button>
+        <button onClick={demoUser}>Demo User</button>
       </form>
-    </>
+    </div>
   );
 }
 
