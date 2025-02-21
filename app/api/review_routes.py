@@ -1,6 +1,7 @@
 from flask import Blueprint,request,jsonify
 from ..models.db import db
 from ..models.review import Review
+from ..models.item import Item
 from ..forms.review_form import ReviewForm
 from flask_login import login_required, current_user
 
@@ -67,14 +68,19 @@ def update_review(id):
 @review_routes.route("/current", methods=["GET"])
 @login_required
 def get_user_reviews():
-    # Get all reviews made by the current user
     reviews = Review.query.filter_by(user_id=current_user.id).all()
-
-    if not reviews:
-        return {"message": "No reviews found for this user."}, 404
-
-    # Return the reviews in JSON format
-    return jsonify([review.to_dict() for review in reviews])
+    reviews_data = []
+    for review in reviews:
+        item = Item.query.get(review.item_id)
+        reviews_data.append({
+            "id": review.id,
+            "rating": review.rating,
+            "comment": review.comment,
+            "item_name": item.name,  # Include the item name
+            "item_image": item.image_url,
+            "item_id": item.id,     # Include the item ID (optional)
+        })
+    return jsonify(reviews_data)
 
 
 ## Get reviews by id
