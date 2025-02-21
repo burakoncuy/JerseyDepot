@@ -1,48 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useParams, useNavigate } from 'react-router-dom';
 import { getItem } from '../../redux/items';
 import { addToFavorites, removeFromFavorites } from '../../redux/favorite';
-import { addToCart } from '../../redux/cart'; // Import addToCart action
+import { addToCart } from '../../redux/cart';
 
 const ItemDetail = () => {
   const dispatch = useDispatch();
-  const { id } = useParams(); // Get the `id` parameter from the URL
-  const navigate = useNavigate(); // Hook for navigation
+  const { id } = useParams();
+  const navigate = useNavigate();
   const { item, notFound, error, favorites } = useSelector(state => state.items);
-  const [quantity, setQuantity] = useState(1); // Local state for quantity
+  const [quantity, setQuantity] = useState(1);
+  const [cartConfirmation, setCartConfirmation] = useState(""); // State for cart confirmation
 
   useEffect(() => {
     if (id) {
-      dispatch(getItem(id)); // Fetch the item using the `id` from the URL
+      dispatch(getItem(id));
     }
   }, [dispatch, id]);
 
-  // Ensure favorites is always an array (fallback to empty array if undefined)
   const favoritesList = favorites || [];
-
-  // Check if the item is in the favorites
   const isFavorite = favoritesList.some(fav => fav.id === item.id);
 
   const handleFavoriteToggle = () => {
     if (isFavorite) {
-      dispatch(removeFromFavorites(item.id)); // Remove from favorites
+      dispatch(removeFromFavorites(item.id));
     } else {
       fetch(`/api/items/${item.id}/add-to-favorite`, {
         method: 'POST',
       })
-        .then(() => dispatch(addToFavorites(item))) // Add to favorites
+        .then(() => dispatch(addToFavorites(item)))
         .catch((error) => console.error('Error adding to favorites:', error));
     }
   };
 
   const handleAddReview = () => {
-    navigate(`/items/${item.id}/reviews`); // Redirect to the Add Review component
+    navigate(`/items/${item.id}/reviews`);
   };
 
   const handleAddToCart = () => {
-    // Add the item to the cart with the current quantity
     dispatch(addToCart(item.id, quantity));
+    setCartConfirmation("Item added to cart!"); // Show confirmation
+    setTimeout(() => {
+      setCartConfirmation(""); // Hide confirmation after 3 seconds
+    }, 3000);
   };
 
   if (notFound) {
@@ -68,18 +69,15 @@ const ItemDetail = () => {
       <p>Status: {item.item_status}</p>
       <img src={item.image_url} alt={item.name} />
 
-      {/* Heart Icon for Add to Favorites */}
       <button onClick={handleFavoriteToggle} style={{ background: 'none', border: 'none' }}>
         <i
-          className={`fa fa-heart ${isFavorite ? 'text-danger' : ''}`} // Apply text-danger for red color
+          className={`fa fa-heart ${isFavorite ? 'text-danger' : ''}`}
           style={{ fontSize: '2rem', cursor: 'pointer' }}
         ></i>
       </button>
 
-      {/* Add Review Button */}
       <button onClick={handleAddReview}>Add Review</button>
 
-      {/* Show quantity input only if the item is new */}
       {item.condition === 'NEW' && (
         <div>
           <label htmlFor="quantity">Quantity:</label>
@@ -93,8 +91,10 @@ const ItemDetail = () => {
         </div>
       )}
 
-      {/* Add to Cart Button */}
       <button onClick={handleAddToCart}>Add to Cart</button>
+
+      {/* Display confirmation message when item is added to cart */}
+      {cartConfirmation && <div>{cartConfirmation}</div>}
     </div>
   );
 };
