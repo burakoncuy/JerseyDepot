@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getItem } from '../../redux/items';
+import { fetchReviews } from '../../redux/reviews';  // Import fetchReviews action
 import { addToFavorites, removeFromFavorites } from '../../redux/favorite';
 import { addToCart } from '../../redux/cart';
 
@@ -10,12 +11,17 @@ const ItemDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { item, notFound, error, favorites } = useSelector(state => state.items);
+  const reviews = useSelector(state => state.reviews.reviews); // Get reviews from Redux store
+
+console.log(reviews); // Log reviews to ensure user_name is included
+
   const [quantity, setQuantity] = useState(1);
   const [cartConfirmation, setCartConfirmation] = useState(""); // State for cart confirmation
 
   useEffect(() => {
     if (id) {
       dispatch(getItem(id));
+      dispatch(fetchReviews()); // Fetch reviews when the item page loads
     }
   }, [dispatch, id]);
 
@@ -45,6 +51,9 @@ const ItemDetail = () => {
       setCartConfirmation(""); // Hide confirmation after 3 seconds
     }, 3000);
   };
+
+  // Filter reviews for the current item
+  const itemReviews = reviews.filter((review) => review.item_id === parseInt(id));
 
   if (notFound) {
     return <div>Item not found</div>;
@@ -95,6 +104,25 @@ const ItemDetail = () => {
 
       {/* Display confirmation message when item is added to cart */}
       {cartConfirmation && <div>{cartConfirmation}</div>}
+
+      {/* Render reviews below the item details */}
+      <div className="reviews-section">
+  <h3>Reviews</h3>
+  {itemReviews.length === 0 ? (
+    <p>No reviews yet. Be the first to add one!</p>
+  ) : (
+    <ul>
+      {itemReviews.map((review) => (
+        <li key={review.id} className="review-item">
+          <p><strong>{review.user_name}</strong> says:</p> {/* Display the username */}
+          <p>{review.comment}</p>
+          <p>Rating: {review.rating}</p>
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
+
     </div>
   );
 };

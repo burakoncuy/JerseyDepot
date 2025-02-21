@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
 from ..models.item import Item, ItemStatusType, CategoryType, ConditionType, SizeType
 from ..models.favorite import Favorite
+from ..models.user import User
 from ..models.review import Review 
 from ..models.order import Order, OrderStatusType
 from ..models.order_item import OrderItem
@@ -180,11 +181,23 @@ def remove_from_favorite(item_id):
 ## Get reviews for an item
 @item_routes.route("/<int:id>/reviews", methods=["GET"])
 def get_reviews(id):
-    reviews = Review.query.filter_by(id=id).all()
-    if not reviews:
-        return {"message": "no review yet"}
+    reviews = Review.query.filter_by(item_id=id).join(User).all()
     
-    return jsonify([review.to_dict() for review in reviews]), 200
+    if not reviews:
+        return {"message": "No reviews yet"}, 404
+
+    # Create a list of reviews with the associated username
+    reviews_list = [
+        {
+            **review.to_dict(),  # Get all review data
+            'user_name': review.user.username  # Add the username of the user who made the review
+        }
+        for review in reviews
+    ]
+
+    return jsonify(reviews_list), 200
+
+
 
 
 
