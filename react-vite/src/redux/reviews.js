@@ -30,12 +30,12 @@ export const fetchReviews = () => async (dispatch) => {
   
   export const addReview = (itemId, reviewData) => async (dispatch) => {
     try {
-      const response = await fetch(`/api/${itemId}/reviews`, { // Updated route
+      const response = await fetch(`/api/items/${itemId}/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include',
+        credentials: 'include',  // Ensure cookies (session) are sent with the request
         body: JSON.stringify(reviewData),
       });
   
@@ -45,7 +45,7 @@ export const fetchReviews = () => async (dispatch) => {
       }
   
       const newReview = await response.json();
-      dispatch({ type: 'ADD_REVIEW', payload: newReview });
+      dispatch({ type: ADD_REVIEW, payload: newReview });
       return newReview;
     } catch (error) {
       console.error('Error adding review:', error);

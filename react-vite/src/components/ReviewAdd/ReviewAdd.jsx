@@ -1,54 +1,63 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addReview } from "../../redux/reviews";
+import { useParams, useNavigate } from "react-router-dom";
+import { addReview } from "../../redux/reviews"; // Import the addReview action
 
-const AddReviewForm = ({ itemId }) => {
-  console.log("Received itemId in AddReviewForm:", itemId); // Debugging
-
+const AddReview = () => {
   const dispatch = useDispatch();
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState("");
-  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const { id } = useParams(); // Get item ID from URL parameters
+
+  const [review, setReview] = useState({
+    rating: 1,
+    comment: "",
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting review for item ID:", itemId); // Debugging
-
-    if (!itemId) {
-      setError("Invalid item. Please try again.");
-      return;
-    }
 
     try {
-      const reviewData = { rating, comment };
-      await dispatch(addReview(itemId, reviewData));
-      setRating(0);
-      setComment("");
-      setError("");
+      // Dispatch the addReview action with the item ID and review data
+      await dispatch(addReview(id, review));
+      navigate(`/items/${id}`); // Redirect to the item details page after adding the review
     } catch (error) {
-      setError(error.message);
+      console.error("Error adding review:", error);
     }
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setReview((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="number"
-        value={rating}
-        onChange={(e) => setRating(e.target.value)}
-        min="1"
-        max="5"
-        required
-      />
-      <textarea
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        required
-      />
-      <button type="submit">Submit Review</button>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-    </form>
+    <div>
+      <h2>Add a Review</h2>
+      <form onSubmit={handleSubmit}>
+        <label>Rating</label>
+        <input
+          type="number"
+          name="rating"
+          value={review.rating}
+          min="1"
+          max="5"
+          onChange={handleChange}
+        />
+
+        <label>Comment</label>
+        <textarea
+          name="comment"
+          value={review.comment}
+          onChange={handleChange}
+        />
+
+        <button type="submit">Submit Review</button>
+      </form>
+    </div>
   );
 };
 
-export default AddReviewForm;
+export default AddReview;

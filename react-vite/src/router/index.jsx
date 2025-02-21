@@ -9,7 +9,7 @@ import ItemDelete from '../components/ItemDelete';
 import ItemCurrent from '../components/ItemCurrent';
 import Favorite from '../components/Favorite/Favorite';
 import ReviewList from '../components/ReviewList';
-import AddReviewForm from '../components/ReviewAdd';
+import AddReview from '../components/ReviewAdd/ReviewAdd';
 import ReviewUpdate from '../components/ReviewUpdate';
 import ReviewDelete from '../components/ReviewDelete';
 import ReviewByCurrentUser from '../components/ReviewByCurrentUser';
@@ -78,7 +78,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "items/:id/reviews",
-        element: <AddReviewForm />,
+        element: <AddReview />,
       },
       {
         path: "reviews/:id/update",
