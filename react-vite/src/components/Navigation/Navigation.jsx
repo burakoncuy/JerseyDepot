@@ -10,9 +10,8 @@ function Navigation() {
 
 const dispatch = useDispatch()
 const fav = useSelector(state => Object.values(state.favorites))
-// const products = useSelector(state => Object.values(state.shoppingCart))
 const user = useSelector(state => state.session.user || {})
-// console.log('productiso in navigation var haho', products)
+
 
 
 useEffect(() => { 
@@ -33,6 +32,7 @@ return (
         {user.id && <NavLink to='/items/current'>My Items</NavLink>}
         {user.id && <NavLink to='/reviews/current'>My reviews</NavLink>}
         {user.id && <NavLink to='/items/favorites'>My favorites</NavLink>}
+        {user.id && <NavLink to='/cart'> Cart</NavLink>}
         <ProfileButton />
     </div>
   </div>

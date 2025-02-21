@@ -92,13 +92,14 @@
           ...state,
           cartItems: state.cartItems.filter((item) => item.item_id !== action.payload),
         };
-      case UPDATE_CART_ITEM:
-        return {
-          ...state,
-          cartItems: state.cartItems.map((item) =>
-            item.item_id === action.payload.item_id ? action.payload : item
-          ),
-        };
+        case UPDATE_CART_ITEM:
+          return {
+            ...state,
+            cartItems: state.cartItems.map((item) =>
+              item.id === action.payload.id ? { ...item, ...action.payload } : item
+            ),
+          };
+       
       default:
         return state;
     }

@@ -36,7 +36,7 @@ const ItemList = () => {
             <div className="item-details">
               <h3 className="item-name">{item.name}</h3>
               <p className="item-price">${item.price}</p>
-              {user && <button className="add-to-cart-button">Add to Cart</button>}
+              {/* {user && <button className="add-to-cart-button">Add to Cart</button>} */}
             </div>
           </li>
         ))}
