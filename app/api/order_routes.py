@@ -44,30 +44,25 @@ def view_order(id):
 
 
 ## Create a new order
-@order_routes.route("/create", methods=["POST"])
+@order_routes.route("/checkout", methods=["POST"])
 @login_required
-def create_order():
-    # Get cart items for the logged-in user
+def checkout():
     cart_items = Cart.query.filter_by(user_id=current_user.id).all()
 
     if not cart_items:
         return {"message": "Your cart is empty."}, 400
 
-    # Calculate total price for the order
     total = sum([item.quantity * item.item.price for item in cart_items])
 
-    # Create the new order
     new_order = Order(
         user_id=current_user.id,
         total=total,
-        order_status="PENDING"
+        order_status=OrderStatusType.PENDING
     )
     
-    # Add the new order to the database
     db.session.add(new_order)
     db.session.commit()
 
-    # Create order items for each cart item
     for cart_item in cart_items:
         new_order_item = OrderItem(
             order_id=new_order.id,
@@ -76,16 +71,12 @@ def create_order():
             price=cart_item.item.price
         )
         db.session.add(new_order_item)
+        db.session.delete(cart_item)  # Remove from cart
 
-    # Commit all order items to the database
-    db.session.commit()
-
-    # Optionally, clear the cart after order is placed
-    for cart_item in cart_items:
-        db.session.delete(cart_item)
     db.session.commit()
 
     return jsonify(new_order.to_dict()), 201
+
 
 
 
@@ -93,30 +84,23 @@ def create_order():
 @order_routes.route("/<int:id>/status", methods=["PUT"])
 @login_required
 def update_order_status(id):
-    # Get the order by ID and ensure the user is either the buyer or the seller
     order = Order.query.filter_by(id=id).first()
 
     if not order:
         return {"message": "Order not found."}, 404
 
-    # Check if the current user is either the buyer (user who made the order)
-    # or the seller (owner of the items in the order)
     is_buyer = order.user_id == current_user.id
-
-    # Check if the current user is the seller of any of the items in the order
     is_seller = any(item.item.user_id == current_user.id for item in order.order_items)
 
     if not is_buyer and not is_seller:
         return {"message": "You do not have permission to update the order status."}, 403
 
-    # Get the new status from the request
     new_status = request.json.get('order_status')
 
-    if new_status not in ["PENDING", "COMPLETED", "SHIPPED", "CANCELED"]:
+    if new_status not in [status.value for status in OrderStatusType]:
         return {"message": "Invalid order status."}, 400
 
-    # Update the order status
-    order.order_status = new_status
+    order.order_status = OrderStatusType(new_status)
     db.session.commit()
 
     return jsonify(order.to_dict()), 200

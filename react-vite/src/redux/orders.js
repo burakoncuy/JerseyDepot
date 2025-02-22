@@ -1,3 +1,5 @@
+import { fetchCart } from './cart';
+
 // actionTypes.js
 const FETCH_ORDERS = 'FETCH_ORDERS';
 const FETCH_ORDER_DETAILS = 'FETCH_ORDER_DETAILS';
@@ -64,6 +66,33 @@ const UPDATE_ORDER_STATUS = 'UPDATE_ORDER_STATUS';
     }
   };
 
+  export const checkout = () => async (dispatch) => {
+    try {
+      const response = await fetch('/api/orders/checkout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || 'Checkout failed');
+      }
+  
+      dispatch({ type: CREATE_ORDER, payload: data });
+  
+      // Refresh cart after checkout
+      dispatch(fetchCart()); 
+  
+      alert('Order placed successfully!'); // Show confirmation message
+  
+    } catch (error) {
+      console.error('Checkout error:', error.message);
+      alert(`Failed to place order: ${error.message}`);
+    }
+  };
+  
+  
 
   
   const initialState = {
