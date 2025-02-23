@@ -1,32 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getItem } from '../../redux/items';
-import { fetchReviews } from '../../redux/reviews';  // Import fetchReviews action
+import { fetchReviews } from '../../redux/reviews';
 import { addToFavorites, removeFromFavorites } from '../../redux/favorite';
-import { addToCart } from '../../redux/cart';
+import { addToCart, fetchCart } from '../../redux/cart';
 
 const ItemDetail = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
   const { item, notFound, error, favorites } = useSelector(state => state.items);
-  const reviews = useSelector(state => state.reviews.reviews); // Get reviews from Redux store
+  const reviews = useSelector(state => state.reviews.reviews);
+  const cartItems = useSelector((state) => state.cart.cartItems);
 
-console.log(reviews); // Log reviews to ensure user_name is included
-
-  const [quantity, setQuantity] = useState(1);
-  const [cartConfirmation, setCartConfirmation] = useState(""); // State for cart confirmation
-
+  // Fetch item, reviews, and cart data when component mounts
   useEffect(() => {
-    if (id) {
-      dispatch(getItem(id));
-      dispatch(fetchReviews()); // Fetch reviews when the item page loads
-    }
+    const loadInitialData = async () => {
+      if (id) {
+        await dispatch(fetchCart());
+        await dispatch(getItem(id));
+        await dispatch(fetchReviews());
+      }
+    };
+    loadInitialData();
   }, [dispatch, id]);
 
   const favoritesList = favorites || [];
-  const isFavorite = favoritesList.some(fav => fav.id === item.id);
+  const isFavorite = favoritesList.some(fav => fav.id === item?.id);
+
+  // Check if item is in cart
+  const isItemInCart = (itemId) => {
+    return cartItems.some((cartItem) => cartItem.item_id === itemId);
+  };
 
   const handleFavoriteToggle = () => {
     if (isFavorite) {
@@ -44,12 +50,16 @@ console.log(reviews); // Log reviews to ensure user_name is included
     navigate(`/items/${item.id}/reviews`);
   };
 
-  const handleAddToCart = () => {
-    dispatch(addToCart(item.id, quantity));
-    setCartConfirmation("Item added to cart!"); // Show confirmation
-    setTimeout(() => {
-      setCartConfirmation(""); // Hide confirmation after 3 seconds
-    }, 3000);
+  const handleAddToCart = async (itemId, itemStatus) => {
+    if (itemStatus !== 'SOLD' && !isItemInCart(itemId)) {
+      try {
+        await dispatch(addToCart(itemId, 1));
+        await dispatch(fetchCart()); // Refresh cart after adding item
+      } catch (error) {
+        console.error('Failed to add item to cart:', error);
+        alert('Failed to add item to cart. Please try again.');
+      }
+    }
   };
 
   // Filter reviews for the current item
@@ -66,6 +76,8 @@ console.log(reviews); // Log reviews to ensure user_name is included
   if (!item) {
     return <div>Loading...</div>;
   }
+
+  const inCart = isItemInCart(item.id);
 
   return (
     <div>
@@ -87,42 +99,34 @@ console.log(reviews); // Log reviews to ensure user_name is included
 
       <button onClick={handleAddReview}>Add Review</button>
 
-      {item.condition === 'NEW' && (
-        <div>
-          <label htmlFor="quantity">Quantity:</label>
-          <input
-            type="number"
-            id="quantity"
-            value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-            min="1"
-          />
-        </div>
-      )}
+      <button 
+        className="add-to-cart-button" 
+        onClick={() => handleAddToCart(item.id, item.item_status)}
+        disabled={item.item_status === 'SOLD' || inCart}
+      >
+        {item.item_status === 'SOLD' 
+          ? 'Sold Out' 
+          : inCart
+            ? 'Item in Cart'
+            : 'Add to Cart'}
+      </button>
 
-      <button onClick={handleAddToCart}>Add to Cart</button>
-
-      {/* Display confirmation message when item is added to cart */}
-      {cartConfirmation && <div>{cartConfirmation}</div>}
-
-      {/* Render reviews below the item details */}
       <div className="reviews-section">
-  <h3>Reviews</h3>
-  {itemReviews.length === 0 ? (
-    <p>No reviews yet. Be the first to add one!</p>
-  ) : (
-    <ul>
-      {itemReviews.map((review) => (
-        <li key={review.id} className="review-item">
-          <p><strong>{review.user_name}</strong> says:</p> {/* Display the username */}
-          <p>{review.comment}</p>
-          <p>Rating: {review.rating}</p>
-        </li>
-      ))}
-    </ul>
-  )}
-</div>
-
+        <h3>Reviews</h3>
+        {itemReviews.length === 0 ? (
+          <p>No reviews yet. Be the first to add one!</p>
+        ) : (
+          <ul>
+            {itemReviews.map((review) => (
+              <li key={review.id} className="review-item">
+                <p><strong>{review.user_name}</strong> says:</p>
+                <p>{review.comment}</p>
+                <p>Rating: {review.rating}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };

@@ -24,6 +24,7 @@ export const fetchCart = () => async (dispatch) => {
 };
 
 // Add an item to the cart
+
 export const addToCart = (itemId, quantity) => async (dispatch) => {
   try {
     const response = await fetch('/api/cart', {
@@ -34,8 +35,10 @@ export const addToCart = (itemId, quantity) => async (dispatch) => {
     });
     const cartItem = await response.json();
     dispatch({ type: ADD_TO_CART, payload: cartItem });
+    return cartItem; // Return the added cart item
   } catch (error) {
     console.error('Error adding to cart:', error);
+    throw error; // Throw error to handle it in the component
   }
 };
 
@@ -81,6 +84,10 @@ const cartReducer = (state = initialState, action) => {
         cartItems: Array.isArray(action.payload) ? action.payload : [],
       };
     case ADD_TO_CART:
+      // Prevent duplicate items
+      if (state.cartItems.some(item => item.item_id === action.payload.item_id)) {
+        return state;
+      }
       return {
         ...state,
         cartItems: [...state.cartItems, action.payload],
@@ -94,7 +101,7 @@ const cartReducer = (state = initialState, action) => {
       return {
         ...state,
         cartItems: state.cartItems.map((item) =>
-          item.id === action.payload.id ? { ...item, ...action.payload } : item
+          item.item_id === action.payload.item_id ? { ...item, ...action.payload } : item
         ),
       };
     default:

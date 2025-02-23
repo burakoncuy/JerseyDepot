@@ -54,14 +54,14 @@ const Cart = () => {
         {cartItems.map((item) => (
           <li key={item.id}>
             <p>{item.item.name} - ${item.item.price}</p>
-            <p>Quantity: {item.quantity}</p>
+            {/* <p>Quantity: {item.quantity}</p>
 
             {item.item.condition === 'NEW' && (
               <>
                 <button onClick={() => handleUpdateQuantity(item.item_id, item.quantity + 1)}>+</button>
                 <button onClick={() => handleUpdateQuantity(item.item_id, item.quantity - 1)}>-</button>
               </>
-            )}
+            )} */}
 
             <button onClick={() => handleRemoveItem(item.item_id)}>Remove</button>
           </li>
