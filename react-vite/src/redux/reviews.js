@@ -8,15 +8,25 @@ const DELETE_REVIEW = 'DELETE_REVIEW';
 
 
 // THUNKS
-export const fetchReviews = () => async (dispatch) => {
-    try {
-      const response = await fetch('/api/reviews');
-      const reviews = await response.json();
-      dispatch({ type: FETCH_REVIEWS, payload: reviews });
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
+export const fetchReviews = (itemId) => async (dispatch) => {
+  try {
+    const response = await fetch(`/api/items/${itemId}/reviews`);
+    if (!response.ok) {
+      const data = await response.json();
+      if (response.status === 404) {
+        // If no reviews, set empty array
+        dispatch({ type: FETCH_REVIEWS, payload: [] });
+        return;
+      }
+      throw new Error(data.message);
     }
-  };
+    const reviews = await response.json();
+    dispatch({ type: FETCH_REVIEWS, payload: reviews });
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    dispatch({ type: FETCH_REVIEWS, payload: [] });
+  }
+};
 
   export const fetchCurrentUserReviews = () => async (dispatch) => {
     try {
@@ -81,9 +91,10 @@ export const fetchReviews = () => async (dispatch) => {
     }
   };
 
-  // INITIAL STATE
   const initialState = {
     reviews: [],
+    isLoading: false,
+    error: null
   };
   
 
@@ -91,10 +102,12 @@ export const fetchReviews = () => async (dispatch) => {
   const reviewReducer = (state = initialState, action) => {
     switch (action.type) {
       case FETCH_REVIEWS:
-        return {
-          ...state,
-          reviews: action.payload,
-        };
+      return {
+        ...state,
+        reviews: action.payload,
+        isLoading: false,
+        error: null
+      };
       case ADD_REVIEW:
         return {
           ...state,

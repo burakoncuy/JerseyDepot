@@ -13,21 +13,26 @@ const ItemList = () => {
   const user = useSelector((state) => state.session?.user);
   const navigate = useNavigate();
 
-  // Fetch both items and cart data when component mounts
   useEffect(() => {
     const loadInitialData = async () => {
-      await dispatch(fetchCart());
+      if (user) {
+        await dispatch(fetchCart());
+      }
       await dispatch(getItems());
     };
     loadInitialData();
-  }, [dispatch]);
+  }, [dispatch, user]);
 
-  // Check if item is in cart using item_id
   const isItemInCart = (itemId) => {
     return cartItems.some((cartItem) => cartItem.item_id === itemId);
   };
 
   const handleAddToCart = async (itemId, itemStatus) => {
+    if (!user) {
+      navigate('/login'); // Redirect to login if user is not authenticated
+      return;
+    }
+
     if (itemStatus !== 'SOLD' && !isItemInCart(itemId)) {
       try {
         await dispatch(addToCart(itemId, 1));
@@ -43,10 +48,11 @@ const ItemList = () => {
     navigate(`/items/${itemId}`);
   };
 
-  // Refresh items when cart changes to update availability
   useEffect(() => {
-    dispatch(refreshItems());
-  }, [cartItems, dispatch]);
+    if (user) {
+      dispatch(refreshItems());
+    }
+  }, [cartItems, dispatch, user]);
 
   return (
     <div className="item-list-container">
@@ -66,17 +72,26 @@ const ItemList = () => {
               <div className="item-details">
                 <h3 className="item-name">{item.name}</h3>
                 <p className="item-price">${item.price}</p>
-                <button 
-                  className="add-to-cart-button" 
-                  onClick={() => handleAddToCart(item.id, item.item_status)}
-                  disabled={item.item_status === 'SOLD' || inCart}
-                >
-                  {item.item_status === 'SOLD' 
-                    ? 'Sold Out' 
-                    : inCart
-                      ? 'Item in Cart' 
-                      : 'Add to Cart'}
-                </button>
+                {user ? (
+                  <button 
+                    className="add-to-cart-button" 
+                    onClick={() => handleAddToCart(item.id, item.item_status)}
+                    disabled={item.item_status === 'SOLD' || inCart}
+                  >
+                    {item.item_status === 'SOLD' 
+                      ? 'Sold Out' 
+                      : inCart
+                        ? 'Item in Cart' 
+                        : 'Add to Cart'}
+                  </button>
+                ) : (
+                  <button 
+                    className="login-to-buy-button"
+                    onClick={() => navigate('/')}
+                  >
+                    Login to Purchase
+                  </button>
+                )}
               </div>
             </li>
           );

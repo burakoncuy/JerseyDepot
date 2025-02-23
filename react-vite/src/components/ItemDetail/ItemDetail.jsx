@@ -13,18 +13,20 @@ const ItemDetail = () => {
   const { item, notFound, error, favorites } = useSelector(state => state.items);
   const reviews = useSelector(state => state.reviews.reviews);
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const user = useSelector((state) => state.session?.user);
 
-  // Fetch item, reviews, and cart data when component mounts
   useEffect(() => {
     const loadInitialData = async () => {
       if (id) {
-        await dispatch(fetchCart());
+        if (user) {
+          await dispatch(fetchCart());
+        }
         await dispatch(getItem(id));
-        await dispatch(fetchReviews());
+        await dispatch(fetchReviews(id)); // Pass the itemId to fetchReviews
       }
     };
     loadInitialData();
-  }, [dispatch, id]);
+  }, [dispatch, id, user]);
 
   const favoritesList = favorites || [];
   const isFavorite = favoritesList.some(fav => fav.id === item?.id);
@@ -113,15 +115,24 @@ const ItemDetail = () => {
 
       <div className="reviews-section">
         <h3>Reviews</h3>
-        {itemReviews.length === 0 ? (
-          <p>No reviews yet. Be the first to add one!</p>
+        {reviews.length === 0 ? (
+          <p>No reviews yet. {user ? 'Be the first to add one!' : 'Login to add a review!'}</p>
         ) : (
           <ul>
-            {itemReviews.map((review) => (
+            {reviews.map((review) => (
               <li key={review.id} className="review-item">
-                <p><strong>{review.user_name}</strong> says:</p>
-                <p>{review.comment}</p>
-                <p>Rating: {review.rating}</p>
+                <div className="review-header">
+                  <p className="review-author">
+                    <strong>{review.user_name}</strong>
+                  </p>
+                  <p className="review-date">
+                    {new Date(review.created_at).toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="review-rating">
+                  Rating: {review.rating} / 5
+                </div>
+                <p className="review-comment">{review.comment}</p>
               </li>
             ))}
           </ul>

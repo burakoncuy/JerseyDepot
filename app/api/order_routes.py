@@ -1,7 +1,7 @@
 from flask import Blueprint,request,jsonify
 from ..models.db import db
 from ..models.cart import Cart
-from ..models.item import Item
+from ..models.item import Item,ItemStatusType
 from ..models.order import Order,OrderStatusType
 from ..models.order_item import OrderItem
 from flask_login import login_required, current_user
@@ -63,6 +63,8 @@ def checkout():
     db.session.add(new_order)
     db.session.commit()
 
+    sold_items = []
+
     for cart_item in cart_items:
         new_order_item = OrderItem(
             order_id=new_order.id,
@@ -71,11 +73,21 @@ def checkout():
             price=cart_item.item.price
         )
         db.session.add(new_order_item)
+        
+        # Update item status to SOLD
+        cart_item.item.item_status = ItemStatusType.SOLD
+        sold_items.append(cart_item.item)
+        
         db.session.delete(cart_item)  # Remove from cart
 
     db.session.commit()
+    
+    # Notify frontend to refresh item states
+    return jsonify({
+        "order": new_order.to_dict(), 
+        "sold_items": [item.to_dict() for item in sold_items]
+    }), 201
 
-    return jsonify(new_order.to_dict()), 201
 
 
 
