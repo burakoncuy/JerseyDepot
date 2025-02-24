@@ -17,15 +17,14 @@ class Order(db.Model):
         __table_args__ = {"schema": SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id'), ondelete="CASCADE"), nullable=False)
     total = db.Column(db.Numeric(10, 2), nullable=False)
     order_status = db.Column(db.Enum(OrderStatusType), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # Relationships
     user = db.relationship('User', back_populates='orders')
-    order_items = db.relationship('OrderItem', back_populates='order')
+    order_items = db.relationship('OrderItem', back_populates='order', cascade="all, delete-orphan")
 
     def to_dict(self):
         return {

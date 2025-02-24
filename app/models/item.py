@@ -32,7 +32,7 @@ class Item(db.Model):
         __table_args__ = {"schema": SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id')), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('users.id'), ondelete="CASCADE"), nullable=False)
     name = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text)
     price = db.Column(db.Numeric(10, 2), nullable=False)
@@ -44,12 +44,15 @@ class Item(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # Relationships
-    cart_items = db.relationship('Cart', back_populates='item')
-    favorites = db.relationship('Favorite', back_populates='item')
-    reviews = db.relationship('Review', back_populates='item')
-    order_items = db.relationship('OrderItem', back_populates='item')   
+    # Relationships with cascading delete
+    cart_items = db.relationship('Cart', back_populates='item', cascade="all, delete-orphan")
+    favorites = db.relationship('Favorite', back_populates='item', cascade="all, delete-orphan")
+    reviews = db.relationship('Review', back_populates='item', cascade="all, delete-orphan")
+    order_items = db.relationship('OrderItem', back_populates='item', cascade="all, delete-orphan")
+    
     user = db.relationship('User', back_populates='items')
+
+
     
     def to_dict(self):
         return {

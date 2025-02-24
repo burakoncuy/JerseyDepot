@@ -105,19 +105,22 @@ def delete_item(id):
     item = Item.query.get(id)
 
     if not item:
-        return {"errors": ["item not found"]}, 404
+        return {"errors": ["Item not found"]}, 404
 
     if current_user.id != item.user_id:
         return {"error": "Unauthorized to delete this item"}, 403
-    
-     # Delete related favorites
+
+    # Delete related reviews first
+    Review.query.filter(Review.item_id == id).delete()
+
+    # Delete related favorites
     Favorite.query.filter(Favorite.item_id == id).delete()
-    
+
+    # Finally, delete the item
     db.session.delete(item)
     db.session.commit()
 
-    return {"message": "item successfully deleted"}
-
+    return {"message": "Item successfully deleted"}, 200
 
 
 ## Add item to favorites

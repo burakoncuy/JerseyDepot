@@ -9,14 +9,13 @@ class OrderItem(db.Model):
         __table_args__ = {"schema": SCHEMA}
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    order_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('orders.id')),nullable=False)
-    item_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('items.id')),nullable=False)
+    order_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('orders.id'), ondelete="CASCADE"), nullable=False)
+    item_id = db.Column(db.Integer, db.ForeignKey(add_prefix_for_prod('items.id'), ondelete="CASCADE"), nullable=False)
     quantity = db.Column(db.Integer, default=1, nullable=False)
     price = db.Column(db.Numeric(10, 2), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # Relationships
     order = db.relationship('Order', back_populates='order_items')
     item = db.relationship('Item', back_populates='order_items')
 

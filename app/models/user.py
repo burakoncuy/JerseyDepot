@@ -5,7 +5,7 @@ import datetime
 from datetime import datetime
 
 
-class User(db.Model,UserMixin):
+class User(db.Model, UserMixin):
     __tablename__ = 'users'
 
     if environment == "production":
@@ -18,12 +18,13 @@ class User(db.Model,UserMixin):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # Relationships
-    items = db.relationship('Item', back_populates='user')
-    cart_items = db.relationship('Cart', back_populates='user')
-    favorites = db.relationship('Favorite', back_populates='user')
-    reviews = db.relationship('Review', back_populates='user')
-    orders = db.relationship('Order', back_populates='user')
+    # Relationships with cascading delete
+    items = db.relationship('Item', back_populates='user', cascade="all, delete-orphan")
+    cart_items = db.relationship('Cart', back_populates='user', cascade="all, delete-orphan")
+    favorites = db.relationship('Favorite', back_populates='user', cascade="all, delete-orphan")
+    reviews = db.relationship('Review', back_populates='user', cascade="all, delete-orphan")
+    orders = db.relationship('Order', back_populates='user', cascade="all, delete-orphan")
+
 
     @property
     def password(self):
