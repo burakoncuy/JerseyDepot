@@ -18,6 +18,7 @@ const ItemList = () => {
   const [sizeFilter, setSizeFilter] = useState('');
   const [conditionFilter, setConditionFilter] = useState('');
   const [sortOrder, setSortOrder] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -65,7 +66,8 @@ const ItemList = () => {
       (categoryFilter ? item.category === categoryFilter : true) &&
       (statusFilter ? item.item_status === statusFilter : true) &&
       (sizeFilter ? item.size === sizeFilter : true) &&
-      (conditionFilter ? item.condition === conditionFilter : true)
+      (conditionFilter ? item.condition === conditionFilter : true) &&
+      (searchQuery ? item.name.toLowerCase().includes(searchQuery.toLowerCase()) : true)
     );
   });
 
@@ -80,6 +82,13 @@ const ItemList = () => {
       <h2 className="item-list-heading">All Items</h2>
       
       <div className="filters">
+        <input 
+          type="text" 
+          placeholder="Search items..." 
+          value={searchQuery} 
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        
         <select onChange={(e) => setCategoryFilter(e.target.value)}>
           <option value="">All Categories</option>
           <option value="SOCCER">Soccer</option>
