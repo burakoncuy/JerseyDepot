@@ -3,17 +3,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getItem } from '../../redux/items';
 import { fetchReviews } from '../../redux/reviews';
-import { addToFavorites, removeFromFavorites } from '../../redux/favorite';
+import { addFavoriteItem, removeFavoriteItem, getFavorites } from '../../redux/favorite';
 import { addToCart, fetchCart } from '../../redux/cart';
 
 const ItemDetail = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
-  const { item, notFound, error, favorites } = useSelector(state => state.items);
+
+  const { item, notFound, error } = useSelector(state => state.items);
   const reviews = useSelector(state => state.reviews.reviews);
   const cartItems = useSelector((state) => state.cart.cartItems);
   const user = useSelector((state) => state.session?.user);
+  const favorites = useSelector(state => state.favorites.favorites);
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -23,28 +25,24 @@ const ItemDetail = () => {
         }
         await dispatch(getItem(id));
         await dispatch(fetchReviews(id)); // Pass the itemId to fetchReviews
+        await dispatch(getFavorites()); // Ensure favorites are loaded
       }
     };
     loadInitialData();
   }, [dispatch, id, user]);
 
-  const favoritesList = favorites || [];
-  const isFavorite = favoritesList.some(fav => fav.id === item?.id);
-
-  // Check if item is in cart
-  const isItemInCart = (itemId) => {
-    return cartItems.some((cartItem) => cartItem.item_id === itemId);
-  };
+  const isFavorite = favorites.some(fav => fav.id === item?.id);
 
   const handleFavoriteToggle = () => {
+    if (!item) return;
     if (isFavorite) {
-      dispatch(removeFromFavorites(item.id));
+      dispatch(removeFavoriteItem(item.id)).then(() => {
+        dispatch(getFavorites());  // Reload the favorites list after removal
+      });
     } else {
-      fetch(`/api/items/${item.id}/add-to-favorite`, {
-        method: 'POST',
-      })
-        .then(() => dispatch(addToFavorites(item)))
-        .catch((error) => console.error('Error adding to favorites:', error));
+      dispatch(addFavoriteItem(item.id)).then(() => {
+        dispatch(getFavorites());  // Reload the favorites list after addition
+      });
     }
   };
 
@@ -53,19 +51,16 @@ const ItemDetail = () => {
   };
 
   const handleAddToCart = async (itemId, itemStatus) => {
-    if (itemStatus !== 'SOLD' && !isItemInCart(itemId)) {
+    if (itemStatus !== 'SOLD' && !cartItems.some(cartItem => cartItem.item_id === itemId)) {
       try {
         await dispatch(addToCart(itemId, 1));
-        await dispatch(fetchCart()); // Refresh cart after adding item
+        await dispatch(fetchCart());
       } catch (error) {
         console.error('Failed to add item to cart:', error);
         alert('Failed to add item to cart. Please try again.');
       }
     }
   };
-
-  // Filter reviews for the current item
-  const itemReviews = reviews.filter((review) => review.item_id === parseInt(id));
 
   if (notFound) {
     return <div>Item not found</div>;
@@ -79,7 +74,7 @@ const ItemDetail = () => {
     return <div>Loading...</div>;
   }
 
-  const inCart = isItemInCart(item.id);
+  const inCart = cartItems.some(cartItem => cartItem.item_id === item.id);
 
   return (
     <div>
@@ -92,17 +87,13 @@ const ItemDetail = () => {
       <p>Status: {item.item_status}</p>
       <img src={item.image_url} alt={item.name} />
 
-      <button onClick={handleFavoriteToggle} style={{ background: 'none', border: 'none' }}>
-        <i
-          className={`fa fa-heart ${isFavorite ? 'text-danger' : ''}`}
-          style={{ fontSize: '2rem', cursor: 'pointer' }}
-        ></i>
+      <button onClick={handleFavoriteToggle}>
+        {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
       </button>
 
       <button onClick={handleAddReview}>Add Review</button>
 
       <button 
-        className="add-to-cart-button" 
         onClick={() => handleAddToCart(item.id, item.item_status)}
         disabled={item.item_status === 'SOLD' || inCart}
       >
