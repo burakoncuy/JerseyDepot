@@ -5,48 +5,101 @@ import { fetchOrders, updateOrderStatus } from '../../redux/orders';
 const OrderList = () => {
   const dispatch = useDispatch();
   const orders = useSelector((state) => state.orders.orders);
-  const currentUser = useSelector((state) => state.session?.user || null); // Get the user from session
+  const currentUser = useSelector((state) => state.session?.user || null);
 
   useEffect(() => {
     dispatch(fetchOrders());
   }, [dispatch]);
 
-  // If user is not authenticated, show loading message
-  if (currentUser === null) {
+  if (!currentUser) {
     return <p>Loading user data...</p>;
   }
 
-  const handleStatusChange = (orderId, newStatus) => {
-    dispatch(updateOrderStatus(orderId, newStatus));
+  const handleStatusChange = async (orderId, newStatus) => {
+    // Update the order status
+    await dispatch(updateOrderStatus(orderId, newStatus));
+
+    // Refetch the orders to reflect the updated status
+    dispatch(fetchOrders());
   };
+
+  const handleCancelOrder = async (orderId) => {
+    // Handle the order cancellation
+    await dispatch(updateOrderStatus(orderId, 'CANCELED'));
+
+    // Refetch the orders after cancellation
+    dispatch(fetchOrders());
+  };
+
+  // Separate orders into "Buying" (as Buyer) and "Selling" (as Seller)
+  const buyingOrders = orders.filter(order => order.user_id === currentUser.id);
+  
+  const sellingOrders = orders.filter(order => 
+    order.order_items && order.order_items.some(orderItem => 
+      orderItem?.item?.user_id === currentUser.id // Ensure item and user_id exist
+    )
+  );
 
   return (
     <div>
+      {/* Buyer Orders */}
       <h2>Your Orders</h2>
-      {orders.length === 0 ? (
-        <p>No orders found.</p>
+      {buyingOrders.length === 0 ? (
+        <p>You have not placed any orders yet.</p>
       ) : (
         <ul>
-          {orders.map((order) => (
+          {buyingOrders.map(order => (
             <li key={order.id}>
               <p>Order ID: {order.id}</p>
               <p>Total: ${order.total}</p>
               <p>Status: {order.order_status}</p>
-
-              {/* Ensure currentUser is defined before checking permissions */}
-              {currentUser && (order.order_items?.some(item => item.item?.user_id === currentUser.id) || order.user_id === currentUser.id) ? (
-                <select
-                  value={order.order_status}
-                  onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                >
-                  <option value="PENDING">Pending</option>
-                  <option value="SHIPPED">Shipped</option>
-                  <option value="COMPLETED">Completed</option>
-                  <option value="CANCELED">Canceled</option>
-                </select>
-              ) : (
-                <p>You cannot change the status of this order.</p>
+              
+              {/* Show Cancel Button if Order is Pending */}
+              {order.order_status === 'PENDING' && (
+                <button onClick={() => handleCancelOrder(order.id)}>Cancel Order</button>
               )}
+              {/* Buyer CANNOT change status */}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* Seller Orders */}
+      <h2>Items You've Sold</h2>
+      {sellingOrders.length === 0 ? (
+        <p>No items sold yet.</p>
+      ) : (
+        <ul>
+          {sellingOrders.map(order => (
+            <li key={order.id}>
+              <p>Order ID: {order.id}</p>
+              <p>Total: ${order.total}</p>
+              <p>Status: {order.order_status}</p>
+              
+              {/* Show Items Sold */}
+              <ul>
+                {order.order_items
+                  .filter(orderItem => orderItem?.item?.user_id === currentUser.id) // Filter for seller's items
+                  .map(orderItem => (
+                    <li key={orderItem.id}>
+                      <p>Sold Item: {orderItem.item.name}</p>
+                      <p>Quantity: {orderItem.quantity}</p>
+                      <p>Price: ${orderItem.price}</p>
+                      <img src={orderItem.item.image_url} alt={orderItem.item.name} width="100" />
+                    </li>
+                ))}
+              </ul>
+
+              {/* Seller CAN change status */}
+              <select
+                value={order.order_status}
+                onChange={(e) => handleStatusChange(order.id, e.target.value)}
+              >
+                <option value="PENDING">Pending</option>
+                <option value="SHIPPED">Shipped</option>
+                <option value="COMPLETED">Completed</option>
+                <option value="CANCELED">Canceled</option>
+              </select>
             </li>
           ))}
         </ul>

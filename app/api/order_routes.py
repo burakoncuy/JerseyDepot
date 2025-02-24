@@ -13,15 +13,27 @@ order_routes = Blueprint("orders", __name__)
 @order_routes.route("", methods=["GET"])
 @login_required
 def view_orders():
-    # Get all orders for the logged-in user
-    orders = Order.query.filter_by(user_id=current_user.id).all()
+    # Get all orders where the user is either the buyer OR selling an item
+    orders = Order.query.join(OrderItem).join(Item).filter(
+        (Order.user_id == current_user.id) | (Item.user_id == current_user.id)
+    ).distinct().all()
 
     if not orders:
         return jsonify([]), 200  # Return an empty array if no orders are found
 
-
-    # Return the orders in JSON format
-    return jsonify([order.to_dict() for order in orders]), 200
+    # Return orders with expanded item details
+    return jsonify([
+        {
+            **order.to_dict(),
+            'order_items': [
+                {
+                    **order_item.to_dict(),
+                    'item': order_item.item.to_dict()  # Include full item details
+                } for order_item in order.order_items
+            ]
+        }
+        for order in orders
+    ]), 200
 
 
 ## View Order Details
