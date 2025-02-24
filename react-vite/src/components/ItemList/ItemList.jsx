@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getItems } from '../../redux/items';
 import { addToCart, fetchCart } from '../../redux/cart';
@@ -12,6 +12,12 @@ const ItemList = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const user = useSelector((state) => state.session?.user);
   const navigate = useNavigate();
+
+  const [categoryFilter, setCategoryFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [sizeFilter, setSizeFilter] = useState('');
+  const [conditionFilter, setConditionFilter] = useState('');
+  const [sortOrder, setSortOrder] = useState('');
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -54,11 +60,64 @@ const ItemList = () => {
     }
   }, [cartItems, dispatch, user]);
 
+  let filteredItems = items.filter((item) => {
+    return (
+      (categoryFilter ? item.category === categoryFilter : true) &&
+      (statusFilter ? item.item_status === statusFilter : true) &&
+      (sizeFilter ? item.size === sizeFilter : true) &&
+      (conditionFilter ? item.condition === conditionFilter : true)
+    );
+  });
+
+  if (sortOrder === 'low-to-high') {
+    filteredItems.sort((a, b) => a.price - b.price);
+  } else if (sortOrder === 'high-to-low') {
+    filteredItems.sort((a, b) => b.price - a.price);
+  }
+
   return (
     <div className="item-list-container">
       <h2 className="item-list-heading">All Items</h2>
+      
+      <div className="filters">
+        <select onChange={(e) => setCategoryFilter(e.target.value)}>
+          <option value="">All Categories</option>
+          <option value="SOCCER">Soccer</option>
+          <option value="FOOTBALL">Football</option>
+          <option value="BASKETBALL">Basketball</option>
+          <option value="BASEBALL">Baseball</option>
+        </select>
+
+        <select onChange={(e) => setStatusFilter(e.target.value)}>
+          <option value="">All Status</option>
+          <option value="AVAILABLE">Available</option>
+          <option value="SOLD">Sold</option>
+        </select>
+
+        <select onChange={(e) => setSizeFilter(e.target.value)}>
+          <option value="">All Sizes</option>
+          <option value="S">S</option>
+          <option value="M">M</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
+          <option value="XXL">XXL</option>
+        </select>
+
+        <select onChange={(e) => setConditionFilter(e.target.value)}>
+          <option value="">All Conditions</option>
+          <option value="NEW">New</option>
+          <option value="USED">Used</option>
+        </select>
+
+        <select onChange={(e) => setSortOrder(e.target.value)}>
+          <option value="">Sort By Price</option>
+          <option value="low-to-high">Low to High</option>
+          <option value="high-to-low">High to Low</option>
+        </select>
+      </div>
+
       <ul className="item-list-grid">
-        {items.map((item) => {
+        {filteredItems.map((item) => {
           const inCart = isItemInCart(item.id);
           return (
             <li key={item.id} className="item-card">
