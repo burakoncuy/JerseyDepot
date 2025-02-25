@@ -14,15 +14,35 @@ const AddReview = () => {
     comment: "",
   });
 
+  const [errors, setErrors] = useState({
+    comment: "",
+  });
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Comment Validation
+    if (review.comment.length < 5) {
+      newErrors.comment = "Comment must be at least 5 characters.";
+    }
+
+    setErrors(newErrors);
+
+    // Return true if no errors, else false
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      // Dispatch the addReview action with the item ID and review data
-      await dispatch(addReview(id, review));
-      navigate(`/items/${id}`); // Redirect to the item details page after adding the review
-    } catch (error) {
-      console.error("Error adding review:", error);
+    if (validateForm()) {
+      try {
+        // Dispatch the addReview action with the item ID and review data
+        await dispatch(addReview(id, review));
+        navigate(`/items/${id}`); // Redirect to the item details page after adding the review
+      } catch (error) {
+        console.error("Error adding review:", error);
+      }
     }
   };
 
@@ -56,6 +76,7 @@ const AddReview = () => {
           onChange={handleChange}
           className="add-review__textarea"
         />
+        {errors.comment && <p className="error">{errors.comment}</p>}
 
         <button type="submit" className="add-review__button">Submit Review</button>
       </form>

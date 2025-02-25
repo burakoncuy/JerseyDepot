@@ -83,3 +83,11 @@
     transform: scale(0.98);
   }
   
+  .error {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: -10px;
+    margin-bottom: 15px;
+    font-weight: 500;
+  }
+  

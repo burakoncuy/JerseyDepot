@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { updateReview } from "../../redux/reviews"; // Make sure to import the updateReview action
+import { updateReview } from "../../redux/reviews"; // Import the updateReview action
 import './ReviewUpdate.css'; // Import the CSS file for styles
 
 const UpdateReview = () => {
@@ -11,6 +11,10 @@ const UpdateReview = () => {
 
   const [review, setReview] = useState({
     rating: 1,
+    comment: "",
+  });
+
+  const [errors, setErrors] = useState({
     comment: "",
   });
 
@@ -25,10 +29,27 @@ const UpdateReview = () => {
     fetchReviewData();
   }, [id]);
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Comment Validation
+    if (review.comment.length < 5) {
+      newErrors.comment = "Comment must be at least 5 characters.";
+    }
+
+    setErrors(newErrors);
+
+    // Return true if no errors, else false
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(updateReview(id, review)); // Dispatch update review action
-    navigate("/reviews/current"); // Redirect to user reviews page
+
+    if (validateForm()) {
+      dispatch(updateReview(id, review)); // Dispatch update review action
+      navigate("/reviews/current"); // Redirect to user reviews page
+    }
   };
 
   const handleChange = (e) => {
@@ -61,6 +82,7 @@ const UpdateReview = () => {
           onChange={handleChange}
           className="update-review__textarea"
         />
+        {errors.comment && <p className="error">{errors.comment}</p>}
 
         <button type="submit" className="update-review__button">Update Review</button>
       </form>

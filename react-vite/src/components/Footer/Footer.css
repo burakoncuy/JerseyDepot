@@ -1,0 +1,111 @@
+/* General page setup */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Footer Wrapper */
+  .footer-wrapper {
+    background-color: #121212; /* Dark background for premium feel */
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 0.9rem; /* Smaller font size */
+    position: relative;
+    margin-top: auto; /* Ensures footer is at the bottom */
+  }
+  
+  /* Footer Content */
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Team Section */
+  .team-section {
+    margin-bottom: 10px; /* Reduced margin */
+  }
+  
+  .team-member h4 {
+    font-size: 1.2rem; /* Smaller font size */
+    font-weight: 600;
+    color: #f2f2f2;
+    letter-spacing: 1px;
+  }
+  
+  .social-links {
+    margin-top: 8px; /* Reduced margin */
+  }
+  
+  .social-links a {
+    color: #f2f2f2;
+    font-size: 1.5rem; /* Slightly smaller icons */
+    margin: 0 12px;
+    transition: color 0.3s ease;
+  }
+  
+  .social-links a:hover {
+    color: #f5a623; /* Accent color */
+  }
+  
+  /* Technologies Section */
+  .footer-bottom {
+    margin-top: 15px; /* Reduced margin */
+  }
+  
+  .technologies-used h3 {
+    font-size: 1.2rem; /* Smaller header */
+    font-weight: 500;
+    color: #f2f2f2;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .tech-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .tech-icons i {
+    font-size: 2rem; /* Smaller icon size */
+    color: #f2f2f2;
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+  
+  .tech-icons i:hover {
+    transform: scale(1.1); /* Slight zoom effect */
+    color: #f5a623; /* Accent color */
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .footer-wrapper {
+      padding: 15px;
+    }
+  
+    .footer-content {
+      flex-direction: column;
+    }
+  
+    .social-links a {
+      font-size: 1.4rem; /* Smaller icons for mobile */
+    }
+  
+    .tech-icons {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  
+    .tech-icons i {
+      font-size: 1.8rem; /* Even smaller icons for mobile */
+      margin-bottom: 10px;
+    }
+  }
+  

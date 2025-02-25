@@ -14,7 +14,7 @@ import ReviewUpdate from '../components/ReviewUpdate';
 import ReviewDelete from '../components/ReviewDelete';
 import ReviewByCurrentUser from '../components/ReviewByCurrentUser';
 import LandingPage from '../components/LandingPage';
-// import HomePage from '../components/HomePage';
+import HomePage from '../components/HomePage';
 import OrderList from '../components/Order/Order';
 import Cart from '../components/Cart';
 import Layout from './Layout';
@@ -27,10 +27,10 @@ export const router = createBrowserRouter([
         path: "/",
         element: <LandingPage/>,
       },
-      // {
-      //   path: "home",
-      //   element: <HomePage/>,
-      // },
+      {
+        path: "home",
+        element: <HomePage/>,
+      },
 
       {
         path: "login",

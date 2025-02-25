@@ -18,19 +18,54 @@ const ItemCreate = () => {
         item_status: "AVAILABLE"
     });
 
+    const [errors, setErrors] = useState({
+        name: "",
+        description: "",
+        price: "",
+        image_url: ""
+    });
+
     const categories = ["SOCCER", "FOOTBALL", "BASKETBALL", "BASEBALL"];
     const conditions = ["NEW", "USED"];
     const sizes = ["S", "M", "L", "XL", "XXL"];
-    const statuses = ["AVAILABLE", "SOLD"];
+    // const statuses = ["AVAILABLE", "SOLD"];
+    const statuses = ["AVAILABLE"];
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const validateForm = () => {
+        const newErrors = {};
+
+        // Name Validation
+        if (!formData.name) newErrors.name = "Name is required.";
+
+        // Description Validation
+        if (formData.description.length < 5)
+            newErrors.description = "Description must be at least 5 characters.";
+
+        // Price Validation
+        if (formData.price <= 0)
+            newErrors.price = "Price must be greater than 0.";
+
+        // Image URL Validation
+        const urlPattern = /^(https?:\/\/[^\s$.?#].[^\s]*$)/;
+        if (!urlPattern.test(formData.image_url))
+            newErrors.image_url = "Please enter a valid URL.";
+
+        setErrors(newErrors);
+
+        // Return true if no errors, else false
+        return Object.keys(newErrors).length === 0;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await dispatch(createItem(formData));
-        navigate("/items");
+        if (validateForm()) {
+            await dispatch(createItem(formData));
+            navigate("/items");
+        }
     };
 
     return (
@@ -46,6 +81,7 @@ const ItemCreate = () => {
                     className="item-create__input" 
                     required 
                 />
+                {errors.name && <p className="error">{errors.name}</p>}
                 <textarea 
                     name="description" 
                     placeholder="Description" 
@@ -54,6 +90,7 @@ const ItemCreate = () => {
                     className="item-create__textarea"
                     required
                 ></textarea>
+                {errors.description && <p className="error">{errors.description}</p>}
                 <input 
                     type="number" 
                     name="price" 
@@ -63,6 +100,7 @@ const ItemCreate = () => {
                     className="item-create__input" 
                     required 
                 />
+                {errors.price && <p className="error">{errors.price}</p>}
                 <input 
                     type="text" 
                     name="image_url" 
@@ -72,6 +110,7 @@ const ItemCreate = () => {
                     className="item-create__input" 
                     required 
                 />
+                {errors.image_url && <p className="error">{errors.image_url}</p>}
                 <select 
                     name="category" 
                     value={formData.category} 
