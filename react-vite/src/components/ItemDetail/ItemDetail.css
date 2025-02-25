@@ -96,3 +96,29 @@
   /* Reviews */
   .review-item { background: #f9f9f9; padding: 15px; border-radius: 10px; }
   
+  /* Add this to your ItemDetail.css file */
+
+.star-rating {
+  display: inline-flex;
+  margin-right: 8px;
+}
+
+.star {
+  font-size: 1.2rem;
+  margin-right: 2px;
+}
+
+.star.filled {
+  color: gold;
+}
+
+.star.empty {
+  color: #ccc;
+}
+
+/* Update the review-rating styling */
+.review-rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}

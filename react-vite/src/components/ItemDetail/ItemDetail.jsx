@@ -66,6 +66,25 @@ const ItemDetail = () => {
     }
   };
 
+  // Star Rating component
+  const StarRating = ({ rating }) => {
+    return (
+      <div className="star-rating">
+        {[...Array(5)].map((star, index) => {
+          const starValue = index + 1;
+          return (
+            <span 
+              key={index} 
+              className={`star ${starValue <= rating ? 'filled' : 'empty'}`}
+            >
+              {starValue <= rating ? '★' : '☆'}
+            </span>
+          );
+        })}
+      </div>
+    );
+  };
+
   if (notFound) {
     return <div className="item-detail-error">Item not found</div>;
   }
@@ -146,7 +165,9 @@ const ItemDetail = () => {
                   <p className="review-author"><strong>{review.user_name}</strong></p>
                   <p className="review-date">{new Date(review.created_at).toLocaleDateString()}</p>
                 </div>
-                <div className="review-rating">Rating: {review.rating} / 5</div>
+                <div className="review-rating">
+                  <StarRating rating={review.rating} />
+                </div>
                 <p className="review-comment">{review.comment}</p>
               </li>
             ))}
