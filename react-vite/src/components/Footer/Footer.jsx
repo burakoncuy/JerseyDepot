@@ -2,7 +2,7 @@
 
 import "./Footer.css";
 import { RxGithubLogo } from "react-icons/rx";
-import { FaReact, FaLinkedin, FaAws } from "react-icons/fa";
+import { FaReact, FaLinkedin } from "react-icons/fa";
 import { PiFileHtmlDuotone, PiFileCssFill } from "react-icons/pi";
 import { IoLogoJavascript } from "react-icons/io";
 import { SiPython } from "react-icons/si";

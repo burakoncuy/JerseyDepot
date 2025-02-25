@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getFavorites, removeFavoriteItem } from "../../redux/favorite";
 import './Favorite.css'; // Import the CSS file for styles

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCart, removeFromCart, updateCartItem } from '../../redux/cart';
+import { fetchCart, removeFromCart} from '../../redux/cart';
 import { checkout } from '../../redux/orders';
 import './Cart.css'; // Importing the CSS file for styles
 
@@ -22,10 +22,10 @@ const Cart = () => {
     dispatch(removeFromCart(itemId));
   };
 
-  const handleUpdateQuantity = (itemId, quantity) => {
-    if (quantity < 1) return;
-    dispatch(updateCartItem(itemId, quantity));
-  };
+  // const handleUpdateQuantity = (itemId, quantity) => {
+  //   if (quantity < 1) return;
+  //   dispatch(updateCartItem(itemId, quantity));
+  // };
 
   if (loading) {
     return <div className="cart__loading-message">Loading your cart...</div>;

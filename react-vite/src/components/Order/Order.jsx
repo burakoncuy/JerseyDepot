@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchOrders, updateOrderStatus } from '../../redux/orders';
 import './Order.css'; // Importing the CSS file for styles
@@ -65,7 +65,7 @@ const OrderList = () => {
 
         {/* Seller Orders */}
         <div className="order-list__column">
-          <h2 className="order-list__heading">Items You've Sold</h2>
+          <h2 className="order-list__heading">Items You&apos;ve Sold</h2>
           {sellingOrders.length === 0 ? (
             <p className="order-list__empty-message">No items sold yet.</p>
           ) : (

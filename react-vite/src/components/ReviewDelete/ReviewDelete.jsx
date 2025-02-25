@@ -1,12 +1,13 @@
 // components/DeleteReviewButton.js
-import React from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { deleteReview } from '../../redux/reviews';
 
-const DeleteReviewButton = ({ reviewId, deleteReview, onDeleteComplete }) => {
+const DeleteReviewButton = ({ reviewId, onDeleteComplete }) => {
+  const dispatch = useDispatch();
+
   const handleDelete = () => {
     if (window.confirm('Are you sure you want to delete this review?')) {
-      deleteReview(reviewId);
+      dispatch(deleteReview(reviewId));
       if (onDeleteComplete) {
         onDeleteComplete(); // Optional callback to refresh the list or close a modal
       }
@@ -20,4 +21,4 @@ const DeleteReviewButton = ({ reviewId, deleteReview, onDeleteComplete }) => {
   );
 };
 
-export default connect(null, { deleteReview })(DeleteReviewButton);
+export default DeleteReviewButton;

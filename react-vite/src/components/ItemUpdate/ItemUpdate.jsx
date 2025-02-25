@@ -49,7 +49,7 @@ const ItemUpdate = () => {
     
     const categories = ["SOCCER", "FOOTBALL", "BASKETBALL", "BASEBALL"];
     const conditions = ["NEW", "USED"];
-    const sizes = ["S", "M", "L", "XL", "XXL"];
+    const sizes = ["S", "M", "L", "XL"];
     const statuses = ["AVAILABLE", "SOLD"];
 
     const handleChange = (e) => {
