@@ -29,12 +29,12 @@ function Navigation() {
           {user.id && <NavLink to='/reviews/current' className="nav-item">My Reviews</NavLink>}
           {user.id && (
             <NavLink to='/items/favorites' className={`nav-item ${favorites.length > 0 ? 'nav-highlight' : ''}`}>
-              My Favorites <span className="nav-badge">{favorites.length}</span>
+              ❤️  <span className="nav-badge-heart">{favorites.length}</span>
             </NavLink>
           )}
           {user.id && (
             <NavLink to='/cart' className={`nav-item ${cartItems.length > 0 ? 'nav-highlight' : ''}`}>
-              Cart <span className="nav-badge">{cartItems.length}</span>
+              <span className="cart-icon">🛒</span>  <span className="nav-badge-cart">{cartItems.length}</span>
             </NavLink>
           )}
           <ProfileButton />

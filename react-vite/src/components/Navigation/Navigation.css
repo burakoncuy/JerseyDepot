@@ -1,7 +1,7 @@
 /* Navigation Bar */
 .nav-container {
   width: 100%;
-  background-color: #000;
+  background-color: white;
   padding: 15px 0;
   display: flex;
   justify-content: center;
@@ -20,10 +20,10 @@
 
 /* Logo */
 .nav-logo {
-  font-size: 24px;
+  font-size: 36px;
   font-weight: bold;
-  text-transform: uppercase;
-  color: #fff;
+  /* text-transform: uppercase; */
+  color: black;
   text-decoration: none;
   transition: color 0.3s ease;
 }
@@ -41,8 +41,8 @@
 
 /* Individual Link */
 .nav-item {
-  color: #fff;
-  font-size: 16px;
+  color: black;
+  font-size: 24px;
   text-transform: uppercase;
   text-decoration: none;
   transition: color 0.3s ease;
@@ -87,4 +87,27 @@
     gap: 10px;
     margin-top: 10px;
   }
+}
+
+
+/* Profile Button Wrapper */
+.nav-profile {
+  margin-left: auto;
+}
+
+/* Profile Button */
+.nav-profile-btn {
+  background-color: #0071e3;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.nav-profile-btn:hover {
+  background-color: #005bb5;
 }

@@ -110,7 +110,7 @@ const ItemList = () => {
 
   return (
     <div className="item-list-container">
-      <h2 className="item-list-heading">All Items</h2>
+      {/* <h2 className="item-list-heading">Jerseys</h2> */}
       
       <div className="filters">
         <input 

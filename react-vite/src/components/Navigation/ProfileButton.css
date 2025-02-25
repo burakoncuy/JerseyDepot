@@ -10,7 +10,7 @@
   
   .profile-button__icon:hover {
     transform: scale(1.1);
-    color: white;
+    color: blue;
   }
   
   /* Dropdown Menu */
@@ -30,14 +30,14 @@
   
   .profile-button__item {
     font-size: 16px;
-    color: #333;
+    color: black;
     padding: 10px;
     transition: background-color 0.3s ease;
     cursor: pointer;
   }
   
   .profile-button__item:hover {
-    background-color: #f0f0f0;
+    color: blue;
   }
   
   .profile-button__logout {

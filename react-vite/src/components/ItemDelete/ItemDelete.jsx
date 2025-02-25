@@ -34,7 +34,7 @@ const ItemDelete = () => {
             try {
                 const result = await dispatch(deleteItem(id)); // Dispatch delete action
                 console.log("Delete result:", result); // Debugging
-                navigate("/items"); // Redirect after successful deletion
+                navigate("/items/current"); // Redirect after successful deletion
             } catch (err) {
                 console.error("Failed to delete item:", err); // Debugging
                 setError("Failed to delete item");

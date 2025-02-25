@@ -7,13 +7,15 @@
   color: #111;
 }
 
-.item-list-heading {
+/* .item-list-heading {
   text-align: center;
   font-size: 32px;
   font-weight: bold;
   margin-bottom: 20px;
   text-transform: uppercase;
-}
+  background-color: black;
+  color:white;
+} */
 
 .filters {
   display: flex;

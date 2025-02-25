@@ -107,7 +107,7 @@ const ItemDetail = () => {
               disabled={isOwner}
               title={isOwner ? "You cannot review your own item" : ""}
             >
-              Add Review
+              {isOwner ? 'Your Item' : 'Add Review'}
             </button>
 
             <button 
