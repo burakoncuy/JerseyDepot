@@ -1,0 +1,85 @@
+/* General Container */
+.update-review__container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  /* Heading */
+  .update-review__heading {
+    font-size: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    color: #111;
+  }
+  
+  /* Form Layout */
+  .update-review__form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+  
+  .update-review__label {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  /* Input and Textarea Styling */
+  .update-review__input,
+  .update-review__textarea {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    width: 80%;
+  }
+  
+  .update-review__input:focus,
+  .update-review__textarea:focus {
+    border-color: #0071e3;
+    outline: none;
+  }
+  
+  /* Textarea Styling */
+  .update-review__textarea {
+    height: 120px;
+    resize: none;
+  }
+  
+  /* Button Styling */
+  .update-review__button {
+    padding: 14px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    background-color: #0071e3;
+    color: white;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 50%;
+  }
+  
+  .update-review__button:hover {
+    background-color: #005bb5;
+    transform: scale(1.05);
+  }
+  
+  .update-review__button:active {
+    transform: scale(0.98);
+  }
+  

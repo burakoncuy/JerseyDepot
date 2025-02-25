@@ -36,7 +36,7 @@ const ItemList = () => {
 
   const handleAddToCart = async (itemId, itemStatus) => {
     if (!user) {
-      navigate('/login'); // Redirect to login if user is not authenticated
+      navigate('/login');
       return;
     }
 
@@ -61,15 +61,22 @@ const ItemList = () => {
     }
   }, [cartItems, dispatch, user]);
 
-  let filteredItems = items.filter((item) => {
-    return (
-      (categoryFilter ? item.category === categoryFilter : true) &&
-      (statusFilter ? item.item_status === statusFilter : true) &&
-      (sizeFilter ? item.size === sizeFilter : true) &&
-      (conditionFilter ? item.condition === conditionFilter : true) &&
-      (searchQuery ? item.name.toLowerCase().includes(searchQuery.toLowerCase()) : true)
-    );
-  });
+  const handleClearFilters = () => {
+    setCategoryFilter('');
+    setStatusFilter('');
+    setSizeFilter('');
+    setConditionFilter('');
+    setSortOrder('');
+    setSearchQuery('');
+  };
+
+  let filteredItems = items.filter((item) => (
+    (categoryFilter ? item.category === categoryFilter : true) &&
+    (statusFilter ? item.item_status === statusFilter : true) &&
+    (sizeFilter ? item.size === sizeFilter : true) &&
+    (conditionFilter ? item.condition === conditionFilter : true) &&
+    (searchQuery ? item.name.toLowerCase().includes(searchQuery.toLowerCase()) : true)
+  ));
 
   if (sortOrder === 'low-to-high') {
     filteredItems.sort((a, b) => a.price - b.price);
@@ -89,7 +96,7 @@ const ItemList = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         
-        <select onChange={(e) => setCategoryFilter(e.target.value)}>
+        <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
           <option value="">All Categories</option>
           <option value="SOCCER">Soccer</option>
           <option value="FOOTBALL">Football</option>
@@ -97,13 +104,13 @@ const ItemList = () => {
           <option value="BASEBALL">Baseball</option>
         </select>
 
-        <select onChange={(e) => setStatusFilter(e.target.value)}>
+        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
           <option value="">All Status</option>
           <option value="AVAILABLE">Available</option>
           <option value="SOLD">Sold</option>
         </select>
 
-        <select onChange={(e) => setSizeFilter(e.target.value)}>
+        <select value={sizeFilter} onChange={(e) => setSizeFilter(e.target.value)}>
           <option value="">All Sizes</option>
           <option value="S">S</option>
           <option value="M">M</option>
@@ -112,17 +119,19 @@ const ItemList = () => {
           <option value="XXL">XXL</option>
         </select>
 
-        <select onChange={(e) => setConditionFilter(e.target.value)}>
+        <select value={conditionFilter} onChange={(e) => setConditionFilter(e.target.value)}>
           <option value="">All Conditions</option>
           <option value="NEW">New</option>
           <option value="USED">Used</option>
         </select>
 
-        <select onChange={(e) => setSortOrder(e.target.value)}>
+        <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
           <option value="">Sort By Price</option>
           <option value="low-to-high">Low to High</option>
           <option value="high-to-low">High to Low</option>
         </select>
+
+        <button className="clear-filters-button" onClick={handleClearFilters}>Clear All Filters</button>
       </div>
 
       <ul className="item-list-grid">
@@ -146,19 +155,10 @@ const ItemList = () => {
                     onClick={() => handleAddToCart(item.id, item.item_status)}
                     disabled={item.item_status === 'SOLD' || inCart}
                   >
-                    {item.item_status === 'SOLD' 
-                      ? 'Sold Out' 
-                      : inCart
-                        ? 'Item in Cart' 
-                        : 'Add to Cart'}
+                    {item.item_status === 'SOLD' ? 'Sold Out' : inCart ? 'Item in Cart' : 'Add to Cart'}
                   </button>
                 ) : (
-                  <button 
-                    className="login-to-buy-button"
-                    onClick={() => navigate('/')}
-                  >
-                    Login to Purchase
-                  </button>
+                  <button className="login-to-buy-button" onClick={() => navigate('/')}>Login to Purchase</button>
                 )}
               </div>
             </li>

@@ -1,59 +1,118 @@
-/* LoginForm.css */
+/* Login Modal Container */
+.login-container {
+  background: rgba(0, 0, 0, 0.9);
+  padding: 40px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  color: #fff;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
 
-.main-login {
-    /* Style for your login modal container */
-    max-width: 400px;
-    margin: auto;
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
+/* Title */
+.login-title {
+  font-size: 32px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+/* Error Messages */
+.login-errors {
+  margin-bottom: 10px;
+}
+
+.login-error {
+  color: red;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Form Styling */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-label {
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+
+/* Input Fields */
+.login-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #fff;
+  background: #222;
+  color: #fff;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  transition: border 0.3s ease;
+}
+
+.login-input:focus {
+  border: 1px solid #0071e3;
+  outline: none;
+}
+
+/* Buttons */
+.login-button, .demo-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  border-radius: 25px;
+  margin-top: 10px;
+}
+
+.login-button {
+  background: #fff;
+  color: #000;
+}
+
+.login-button:hover {
+  background: #ddd;
+}
+
+.demo-button {
+  background: #0071e3;
+  color: #fff;
+}
+
+.demo-button:hover {
+  background: #005bb5;
+}
+
+.login-button:active, .demo-button:active {
+  transform: scale(0.98);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .login-container {
+    padding: 30px;
   }
-  
-  .main-login h1 {
-    padding-bottom: 30px;
-    text-align: center;
-    color: #333;
+
+  .login-title {
+    font-size: 28px;
   }
-  
-  .main-login label {
-    display: block;
-    margin-bottom: 10px;
-  }
-  
-  .main-login input {
-    width: 90%;
+
+  .login-button, .demo-button {
+    font-size: 14px;
     padding: 10px;
-    margin-bottom: 5px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
   }
-  
-  .main-login button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 20px;
-  }
-  .main-login button:hover {
-    background-color: blue;
-  }
-  
-  /* Error message styling */
-  .error-mes {
-    position: absolute;
-    top: 70px;
-    color: red;
-    font-size: 0.8em;
-   
-  }
-  
-.error-mesa { 
-    position: absolute;
-    top: 90px;
-    color: red;
-    font-size: 0.8em;
 }

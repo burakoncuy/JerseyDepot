@@ -5,6 +5,7 @@ import { getItem } from '../../redux/items';
 import { fetchReviews } from '../../redux/reviews';
 import { addFavoriteItem, removeFavoriteItem, getFavorites } from '../../redux/favorite';
 import { addToCart, fetchCart } from '../../redux/cart';
+import './ItemDetail.css';
 
 const ItemDetail = () => {
   const dispatch = useDispatch();
@@ -24,8 +25,8 @@ const ItemDetail = () => {
           await dispatch(fetchCart());
         }
         await dispatch(getItem(id));
-        await dispatch(fetchReviews(id)); // Pass the itemId to fetchReviews
-        await dispatch(getFavorites()); // Ensure favorites are loaded
+        await dispatch(fetchReviews(id));
+        await dispatch(getFavorites());
       }
     };
     loadInitialData();
@@ -37,11 +38,11 @@ const ItemDetail = () => {
     if (!item) return;
     if (isFavorite) {
       dispatch(removeFavoriteItem(item.id)).then(() => {
-        dispatch(getFavorites());  // Reload the favorites list after removal
+        dispatch(getFavorites());
       });
     } else {
       dispatch(addFavoriteItem(item.id)).then(() => {
-        dispatch(getFavorites());  // Reload the favorites list after addition
+        dispatch(getFavorites());
       });
     }
   };
@@ -63,66 +64,66 @@ const ItemDetail = () => {
   };
 
   if (notFound) {
-    return <div>Item not found</div>;
+    return <div className="item-detail-error">Item not found</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="item-detail-error">Error: {error}</div>;
   }
 
   if (!item) {
-    return <div>Loading...</div>;
+    return <div className="item-detail-loading">Loading...</div>;
   }
 
   const inCart = cartItems.some(cartItem => cartItem.item_id === item.id);
 
   return (
-    <div>
-      <h1>{item.name}</h1>
-      <p>{item.description}</p>
-      <p>Price: ${item.price}</p>
-      <p>Category: {item.category}</p>
-      <p>Condition: {item.condition}</p>
-      <p>Size: {item.size}</p>
-      <p>Status: {item.item_status}</p>
-      <img src={item.image_url} alt={item.name} />
+    <div className="item-detail-container">
+      <div className="item-detail-content">
+        <img src={item.image_url} alt={item.name} className="item-detail-image" />
 
-      <button onClick={handleFavoriteToggle}>
-        {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
-      </button>
+        <div className="item-detail-info">
+          <h1 className="item-detail-name">{item.name}</h1>
+          <p className="item-detail-description">{item.description}</p>
+          <p className="item-detail-price">Price: ${item.price}</p>
+          <p className="item-detail-category">Category: {item.category}</p>
+          <p className="item-detail-condition">Condition: {item.condition}</p>
+          <p className="item-detail-size">Size: {item.size}</p>
+          <p className={`item-detail-status ${item.item_status === 'SOLD' ? 'sold' : 'available'}`}>
+            Status: {item.item_status}
+          </p>
 
-      <button onClick={handleAddReview}>Add Review</button>
+          <div className="item-detail-actions">
+            <button className="favorite-button" onClick={handleFavoriteToggle}>
+              {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+            </button>
 
-      <button 
-        onClick={() => handleAddToCart(item.id, item.item_status)}
-        disabled={item.item_status === 'SOLD' || inCart}
-      >
-        {item.item_status === 'SOLD' 
-          ? 'Sold Out' 
-          : inCart
-            ? 'Item in Cart'
-            : 'Add to Cart'}
-      </button>
+            <button className="review-button" onClick={handleAddReview}>Add Review</button>
+
+            <button 
+              className="add-to-cart-button"
+              onClick={() => handleAddToCart(item.id, item.item_status)}
+              disabled={item.item_status === 'SOLD' || inCart}
+            >
+              {item.item_status === 'SOLD' ? 'Sold Out' : inCart ? 'Item in Cart' : 'Add to Cart'}
+            </button>
+          </div>
+        </div>
+      </div>
 
       <div className="reviews-section">
-        <h3>Reviews</h3>
+        <h3 className="reviews-heading">Reviews</h3>
         {reviews.length === 0 ? (
-          <p>No reviews yet. {user ? 'Be the first to add one!' : 'Login to add a review!'}</p>
+          <p className="no-reviews">{user ? 'Be the first to add one!' : 'Login to add a review!'}</p>
         ) : (
-          <ul>
+          <ul className="review-list">
             {reviews.map((review) => (
               <li key={review.id} className="review-item">
                 <div className="review-header">
-                  <p className="review-author">
-                    <strong>{review.user_name}</strong>
-                  </p>
-                  <p className="review-date">
-                    {new Date(review.created_at).toLocaleDateString()}
-                  </p>
+                  <p className="review-author"><strong>{review.user_name}</strong></p>
+                  <p className="review-date">{new Date(review.created_at).toLocaleDateString()}</p>
                 </div>
-                <div className="review-rating">
-                  Rating: {review.rating} / 5
-                </div>
+                <div className="review-rating">Rating: {review.rating} / 5</div>
                 <p className="review-comment">{review.comment}</p>
               </li>
             ))}

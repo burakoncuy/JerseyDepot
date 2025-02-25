@@ -14,7 +14,7 @@ function LoginFormModal() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,61 +29,65 @@ function LoginFormModal() {
     if (serverResponse) {
       setErrors(serverResponse);
     } else {
-      await dispatch(fetchCart())
-      await dispatch(getFavorites())
-      navigate('/items')
+      await dispatch(fetchCart());
+      await dispatch(getFavorites());
+      navigate('/items');
       closeModal();
     }
   };
 
   const demoUser = async (e) =>{ 
-    e.preventDefault()
+    e.preventDefault();
 
     const serverResponse = await dispatch(
       thunkLogin({
         email: "demo@aa.io",
         password: "password"
-      }))
-      if (serverResponse) { 
-        setErrors(serverResponse)
-      }else {
-        await dispatch(fetchCart())
-        await dispatch(getFavorites())
+      })
+    );
 
-        navigate('/items')
-        closeModal()
-      }
-  }
+    if (serverResponse) { 
+      setErrors(serverResponse);
+    } else {
+      await dispatch(fetchCart());
+      await dispatch(getFavorites());
+      navigate('/items');
+      closeModal();
+    }
+  };
 
   return (
-    <div className="main-login">
-      <h1>Log In</h1>
-      <div>
-      {errors.email && <p className="error-mesa">{errors.email}</p>}
-      {errors.password && <p className="error-mes">{errors.password}</p>}
+    <div className="login-container">
+      <h1 className="login-title">Log In</h1>
+
+      <div className="login-errors">
+        {errors.email && <p className="login-error">{errors.email}</p>}
+        {errors.password && <p className="login-error">{errors.password}</p>}
       </div>
 
-      <form onSubmit={handleSubmit}>
-        <label>
+      <form onSubmit={handleSubmit} className="login-form">
+        <label className="login-label">
           Email
           <input
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            className="login-input"
           />
         </label>
-        <label>
+        <label className="login-label">
           Password
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            className="login-input"
           />
         </label>
-        <button type="submit">Log In</button>
-        <button onClick={demoUser}>Demo User</button>
+        <button type="submit" className="login-button">Log In</button>
+        <button onClick={demoUser} className="demo-button">Demo User</button>
       </form>
     </div>
   );

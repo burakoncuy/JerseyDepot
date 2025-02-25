@@ -7,10 +7,11 @@ import LoginFormModal from "../LoginFormModal";
 import SignupFormModal from "../SignupFormModal";
 import { useNavigate } from "react-router-dom";
 import { removeFromCart } from "../../redux/cart";
+import './ProfileButton.css'; // Import the CSS file for styles
 
 function ProfileButton() {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const user = useSelector((store) => store.session.user);
   const ulRef = useRef();
@@ -40,24 +41,25 @@ function ProfileButton() {
     e.preventDefault();
     await dispatch(thunkLogout());
     dispatch(removeFromCart())
-    navigate('/')
+    navigate('/');
     closeMenu();
-    
   };
 
   return (
     <>
-      <button onClick={toggleMenu}>
+      <button onClick={toggleMenu} className="profile-button__icon">
         <FaUserCircle />
       </button>
       {showMenu && (
-        <ul className={"profile-dropdown"} ref={ulRef}>
+        <ul className="profile-button__dropdown" ref={ulRef}>
           {user ? (
             <>
-              <li>{user.username}</li>
-              <li>{user.email}</li>
+              <li className="profile-button__item">{user.username}</li>
+              <li className="profile-button__item">{user.email}</li>
               <li>
-                <button onClick={logout}>Log Out</button>
+                <button onClick={logout} className="profile-button__logout">
+                  Log Out
+                </button>
               </li>
             </>
           ) : (

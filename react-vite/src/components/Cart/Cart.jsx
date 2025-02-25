@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCart, removeFromCart, updateCartItem } from '../../redux/cart';
 import { checkout } from '../../redux/orders';
+import './Cart.css'; // Importing the CSS file for styles
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -27,16 +28,16 @@ const Cart = () => {
   };
 
   if (loading) {
-    return <div>Loading your cart...</div>;
+    return <div className="cart__loading-message">Loading your cart...</div>;
   }
 
   if (!Array.isArray(cartItems)) {
     console.error('cartItems is not an array:', cartItems);
-    return <div>Error: Cart data is invalid.</div>;
+    return <div className="cart__error-message">Error: Cart data is invalid.</div>;
   }
 
   if (cartItems.length === 0) {
-    return <div>Your cart is empty.</div>;
+    return <div className="cart__empty-message">Your cart is empty.</div>;
   }
 
   const totalPrice = cartItems.reduce((total, item) => {
@@ -48,31 +49,42 @@ const Cart = () => {
   };
 
   return (
-    <div>
-      <h2>Your Cart</h2>
-      <ul>
+    <div className="cart__container">
+      <h2 className="cart__heading">Your Cart</h2>
+      <ul className="cart__list">
         {cartItems.map((item) => (
-          <li key={item.id}>
-            <p>{item.item.name} - ${item.item.price}</p>
-            {/* <p>Quantity: {item.quantity}</p>
-
-            {item.item.condition === 'NEW' && (
-              <>
-                <button onClick={() => handleUpdateQuantity(item.item_id, item.quantity + 1)}>+</button>
-                <button onClick={() => handleUpdateQuantity(item.item_id, item.quantity - 1)}>-</button>
-              </>
-            )} */}
-
-            <button onClick={() => handleRemoveItem(item.item_id)}>Remove</button>
+          <li key={item.id} className="cart__item-card">
+            <div className="cart__item-image-container">
+              <img
+                src={item.item.image_url}
+                alt={item.item.name}
+                className="cart__item-image"
+              />
+            </div>
+            <div className="cart__item-info">
+              <p className="cart__item-name">{item.item.name} - ${item.item.price}</p>
+              <div className="cart__item-actions">
+                <button 
+                  onClick={() => handleRemoveItem(item.item_id)} 
+                  className="cart__remove-button"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
           </li>
         ))}
       </ul>
 
-      <div>
-        <h3>Total Price: ${totalPrice.toFixed(2)}</h3>
+      <div className="cart__total">
+        <h3 className="cart__total-price">Total Price: ${totalPrice.toFixed(2)}</h3>
       </div>
 
-      <button onClick={handleCheckout} disabled={cartItems.length === 0}>
+      <button 
+        onClick={handleCheckout} 
+        disabled={cartItems.length === 0}
+        className="cart__checkout-button"
+      >
         Proceed to Checkout
       </button>
     </div>

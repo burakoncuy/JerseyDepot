@@ -20,21 +20,21 @@ function Navigation() {
   }, [dispatch, user]);
 
   return (
-    <nav className="nav-bar">
-      <div className="main-div">
-        <NavLink to="/items">NowJersey</NavLink>
-        <div className="second-sub-main">
-          {user.id && <NavLink to='/orders'>My Orders</NavLink>}
-          {user.id && <NavLink to='/items/current'>My Items</NavLink>}
-          {user.id && <NavLink to='/reviews/current'>My Reviews</NavLink>}
+    <nav className="nav-container">
+      <div className="nav-content">
+        <NavLink to="/items" className="nav-logo">NowJersey</NavLink>
+        <div className="nav-links">
+          {user.id && <NavLink to='/orders' className="nav-item">My Orders</NavLink>}
+          {user.id && <NavLink to='/items/current' className="nav-item">My Items</NavLink>}
+          {user.id && <NavLink to='/reviews/current' className="nav-item">My Reviews</NavLink>}
           {user.id && (
-            <NavLink to='/items/favorites' className={favorites.length > 0 ? 'highlight' : ''}>
-              My Favorites <span className="count-badge">{favorites.length}</span>
+            <NavLink to='/items/favorites' className={`nav-item ${favorites.length > 0 ? 'nav-highlight' : ''}`}>
+              My Favorites <span className="nav-badge">{favorites.length}</span>
             </NavLink>
           )}
           {user.id && (
-            <NavLink to='/cart' className={cartItems.length > 0 ? 'highlight' : ''}>
-              Cart <span className="count-badge">{cartItems.length}</span>
+            <NavLink to='/cart' className={`nav-item ${cartItems.length > 0 ? 'nav-highlight' : ''}`}>
+              Cart <span className="nav-badge">{cartItems.length}</span>
             </NavLink>
           )}
           <ProfileButton />
