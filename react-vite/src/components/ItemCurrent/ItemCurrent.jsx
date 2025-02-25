@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getUserItems } from "../../redux/items";
+import './ItemCurrent.css';
 
 const ItemCurrent = () => {
   const dispatch = useDispatch();
@@ -12,36 +13,53 @@ const ItemCurrent = () => {
     dispatch(getUserItems());
   }, [dispatch]);
 
-
   if (!userItems || userItems.length === 0) {
-    return <p>No items found.</p>;
+    return <p className="item-current__no-items-message">No items found.</p>;
   }
 
   return (
-    <div>
-      <h2>Your Items</h2>
-      {/* Button to navigate to the Create Item page */}
-      <button onClick={() => navigate("/items/new")} className="create-item-button">
+    <div className="item-current__container">
+      <h2 className="item-current__heading">Your Items</h2>
+
+      <button 
+        onClick={() => navigate("/items/new")} 
+        className="item-current__create-item-button"
+      >
         Create New Item
       </button>
-      <ul>
+
+      <ul className="item-current__list">
         {userItems.map((item) => (
-          <li key={item.id}>
-            <img src={item.image_url} alt={item.name} width="100" />
-            <h3>{item.name}</h3>
-            <p>{item.description}</p>
-            <p>Price: ${item.price}</p>
-            <p>Status: {item.item_status}</p>
+          <li key={item.id} className="item-current__card">
+            <div className="item-current__image-container">
+              <img 
+                src={item.image_url} 
+                alt={item.name} 
+                className="item-current__image" 
+              />
+            </div>
+            <div className="item-current__details">
+              <h3 className="item-current__name">{item.name}</h3>
+              <p className="item-current__description">{item.description}</p>
+              <p className="item-current__price">Price: ${item.price}</p>
+              <p className="item-current__status">Status: {item.item_status}</p>
 
-            {/* Button to navigate to Update Item page */}
-            <button onClick={() => navigate(`/items/${item.id}/update`)} className="update-item-button">
-              Update
-            </button>
+              <div className="item-current__actions">
+                <button 
+                  onClick={() => navigate(`/items/${item.id}/update`)} 
+                  className="item-current__update-item-button"
+                >
+                  Update
+                </button>
 
-             {/* Button to navigate to Update Item page */}
-             <button onClick={() => navigate(`/items/${item.id}/delete`)} className="delete-item-button">
-              Delete
-            </button>
+                <button 
+                  onClick={() => navigate(`/items/${item.id}/delete`)} 
+                  className="item-current__delete-item-button"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
           </li>
         ))}
       </ul>

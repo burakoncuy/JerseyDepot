@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { deleteItem, getItem } from "../../redux/items";
+import './ItemDelete.css'; // Import the CSS file for styles
 
 const ItemDelete = () => {
     const { id } = useParams();
@@ -12,7 +13,6 @@ const ItemDelete = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Fetch the item when the component mounts
     useEffect(() => {
         dispatch(getItem(id))
             .then(() => setLoading(false))
@@ -23,7 +23,6 @@ const ItemDelete = () => {
             });
     }, [dispatch, id]);
 
-    // Handle the case where the item is not found
     useEffect(() => {
         if (!loading && notFound) {
             setError("Item not found");
@@ -43,15 +42,17 @@ const ItemDelete = () => {
         }
     };
 
-    if (loading) return <h2>Loading...</h2>;
-    if (error) return <h2>{error}</h2>;
+    if (loading) return <h2 className="item-delete__loading">Loading...</h2>;
+    if (error) return <h2 className="item-delete__error">{error}</h2>;
 
     return (
-        <div>
-            <h2>Delete Item</h2>
-            <p>Are you sure you want to delete the item: <strong>{item?.name}</strong>?</p>
-            <button onClick={handleDelete}>Yes, Delete</button>
-            <button onClick={() => navigate("/items")}>Cancel</button>
+        <div className="item-delete__container">
+            <h2 className="item-delete__heading">Delete Item</h2>
+            <p className="item-delete__message">Are you sure you want to delete the item: <strong>{item?.name}</strong>?</p>
+            <div className="item-delete__buttons">
+                <button onClick={handleDelete} className="item-delete__confirm-button">Yes, Delete</button>
+                <button onClick={() => navigate("/items")} className="item-delete__cancel-button">Cancel</button>
+            </div>
         </div>
     );
 };

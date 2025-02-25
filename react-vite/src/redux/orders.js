@@ -11,16 +11,14 @@ const UPDATE_ORDER_STATUS = 'UPDATE_ORDER_STATUS';
   // Fetch all orders for the current user
   export const fetchOrders = () => async (dispatch) => {
     try {
-      const response = await fetch('/api/orders', {
-        credentials: 'include', // Include cookies for authentication
-      });
-      const orders = await response.json();
-      dispatch({ type: FETCH_ORDERS, payload: orders });
+      const response = await fetch('/api/orders', { credentials: 'include' });
+      const data = await response.json();
+      console.log("Fetched Orders Data:", data); // Debugging: check response structure
+      dispatch({ type: FETCH_ORDERS, payload: data });
     } catch (error) {
       console.error('Error fetching orders:', error);
     }
   };
-  
   // Fetch details for a specific order
   export const fetchOrderDetails = (orderId) => async (dispatch) => {
     try {

@@ -1,0 +1,97 @@
+/* General Layout */
+.item-detail-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+    color: #111;
+  }
+  
+  /* Flexbox for Layout */
+  .item-detail-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Image */
+  .item-detail-image {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .item-detail-image:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Item Information */
+  .item-detail-info {
+    max-width: 500px;
+    text-align: left;
+  }
+  
+  .item-detail-name {
+    font-size: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .item-detail-description {
+    font-size: 16px;
+    color: #444;
+  }
+  
+  .item-detail-price {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000;
+  }
+  
+  /* Status Styles */
+  .item-detail-status {
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .item-detail-status.sold {
+    color: red;
+  }
+  
+  .item-detail-status.available {
+    color: green;
+  }
+  
+  /* Buttons */
+  .item-detail-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  
+  .item-detail-actions button {
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    border-radius: 25px;
+    min-width: 160px;
+  }
+  
+  .favorite-button { background: #e0e0e0; }
+  .review-button { background: #0071e3; color: #fff; }
+  .add-to-cart-button { background: #000; color: #fff; }
+  .add-to-cart-button:hover { background: #333; }
+  .add-to-cart-button:disabled { background: #ddd; color: #666; cursor: not-allowed; }
+  
+  /* Reviews */
+  .review-item { background: #f9f9f9; padding: 15px; border-radius: 10px; }
+  

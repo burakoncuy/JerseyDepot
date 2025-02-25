@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCurrentUserReviews, deleteReview } from "../../redux/reviews";
+import './ReviewByCurrentUser.css'; // Import the CSS file
 
 const UserReviews = () => {
   const dispatch = useDispatch();
@@ -25,27 +26,35 @@ const UserReviews = () => {
 
   // Display message if no reviews are found
   if (!userReviews || userReviews.length === 0) {
-    return <p>You have not posted any reviews yet.</p>;
+    return <p className="user-reviews__no-reviews-message">You have not posted any reviews yet.</p>;
   }
 
   return (
-    <div>
-      <h2>Your Reviews</h2>
-      <ul>
+    <div className="user-reviews__container">
+      <h2 className="user-reviews__heading">Your Reviews</h2>
+      <ul className="user-reviews__list">
         {userReviews.map((review) => (
-          <li key={review.id}>
-             <div>
+          <li key={review.id} className="user-reviews__card">
+            <div className="user-reviews__image-container">
               <img
                 src={review.item_image} // Display the item image
                 alt={review.item_name}
-                style={{ width: "100px", height: "100px", objectFit: "cover" }}
+                className="user-reviews__item-image"
               />
             </div>
-            <p>Item: {review.item_name}</p> {/* Display the item name */}
-            <p>Rating: {review.rating}</p>
-            <p>Comment: {review.comment}</p>
-            <button onClick={() => handleDeleteReview(review.id)}>Delete</button>
-            <button onClick={() => handleUpdateReview(review.id)}>Update</button>
+            <div className="user-reviews__details">
+              <p className="user-reviews__item-name">Item: {review.item_name}</p> {/* Display the item name */}
+              <p className="user-reviews__rating">Rating: {review.rating}</p>
+              <p className="user-reviews__comment">Comment: {review.comment}</p>
+              <div className="user-reviews__actions">
+                <button onClick={() => handleDeleteReview(review.id)} className="user-reviews__delete-button">
+                  Delete
+                </button>
+                <button onClick={() => handleUpdateReview(review.id)} className="user-reviews__update-button">
+                  Update
+                </button>
+              </div>
+            </div>
           </li>
         ))}
       </ul>

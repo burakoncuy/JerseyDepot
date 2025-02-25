@@ -1,0 +1,101 @@
+/* General Container */
+.item-update__container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Heading */
+  .item-update__heading {
+    font-size: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #111;
+  }
+  
+  /* Form Layout */
+  .item-update__form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .item-update__input,
+  .item-update__textarea,
+  .item-update__select {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+  }
+  
+  .item-update__input:focus,
+  .item-update__textarea:focus,
+  .item-update__select:focus {
+    border-color: #0071e3;
+    outline: none;
+  }
+  
+  /* Textarea Styling */
+  .item-update__textarea {
+    height: 120px;
+    resize: none;
+  }
+  
+  /* Button Styling */
+  .item-update__button {
+    padding: 14px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    background-color: #0071e3;
+    color: white;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+  }
+  
+  .item-update__button:hover {
+    background-color: #005bb5;
+    transform: scale(1.05);
+  }
+  
+  .item-update__button:active {
+    transform: scale(0.98);
+  }
+  
+  /* Select Box Styling */
+  .item-update__select {
+    font-size: 16px;
+    border-radius: 8px;
+    padding: 12px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+  }
+  
+  /* Focus Effects */
+  .item-update__select:focus {
+    border-color: #0071e3;
+    outline: none;
+  }
+  
+  /* Loading and Error Messages */
+  .item-update__loading-message {
+    font-size: 18px;
+    color: #888;
+    text-align: center;
+    margin-top: 50px;
+  }
+  

@@ -1,0 +1,85 @@
+/* General Container */
+.add-review__container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  /* Heading */
+  .add-review__heading {
+    font-size: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    color: #111;
+  }
+  
+  /* Form Layout */
+  .add-review__form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+  
+  .add-review__label {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  /* Input and Textarea Styling */
+  .add-review__input,
+  .add-review__textarea {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+    width: 80%;
+  }
+  
+  .add-review__input:focus,
+  .add-review__textarea:focus {
+    border-color: #0071e3;
+    outline: none;
+  }
+  
+  /* Textarea Styling */
+  .add-review__textarea {
+    height: 120px;
+    resize: none;
+  }
+  
+  /* Button Styling */
+  .add-review__button {
+    padding: 14px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    background-color: #0071e3;
+    color: white;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 50%;
+  }
+  
+  .add-review__button:hover {
+    background-color: #005bb5;
+    transform: scale(1.05);
+  }
+  
+  .add-review__button:active {
+    transform: scale(0.98);
+  }
+  

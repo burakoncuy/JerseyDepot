@@ -1,56 +1,110 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchOrders, updateOrderStatus } from '../../redux/orders';
+import './Order.css'; // Importing the CSS file for styles
 
 const OrderList = () => {
   const dispatch = useDispatch();
   const orders = useSelector((state) => state.orders.orders);
-  const currentUser = useSelector((state) => state.session?.user || null); // Get the user from session
+  const currentUser = useSelector((state) => state.session?.user || null);
 
   useEffect(() => {
     dispatch(fetchOrders());
   }, [dispatch]);
 
-  // If user is not authenticated, show loading message
-  if (currentUser === null) {
-    return <p>Loading user data...</p>;
+  if (!currentUser) {
+    return <p className="order-list__loading-message">Loading user data...</p>;
   }
 
-  const handleStatusChange = (orderId, newStatus) => {
-    dispatch(updateOrderStatus(orderId, newStatus));
+  const handleStatusChange = async (orderId, newStatus) => {
+    await dispatch(updateOrderStatus(orderId, newStatus));
+    dispatch(fetchOrders());
   };
 
-  return (
-    <div>
-      <h2>Your Orders</h2>
-      {orders.length === 0 ? (
-        <p>No orders found.</p>
-      ) : (
-        <ul>
-          {orders.map((order) => (
-            <li key={order.id}>
-              <p>Order ID: {order.id}</p>
-              <p>Total: ${order.total}</p>
-              <p>Status: {order.order_status}</p>
+  const handleCancelOrder = async (orderId) => {
+    await dispatch(updateOrderStatus(orderId, 'CANCELED'));
+    dispatch(fetchOrders());
+  };
 
-              {/* Ensure currentUser is defined before checking permissions */}
-              {currentUser && (order.order_items?.some(item => item.item?.user_id === currentUser.id) || order.user_id === currentUser.id) ? (
-                <select
-                  value={order.order_status}
-                  onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                >
-                  <option value="PENDING">Pending</option>
-                  <option value="SHIPPED">Shipped</option>
-                  <option value="COMPLETED">Completed</option>
-                  <option value="CANCELED">Canceled</option>
-                </select>
-              ) : (
-                <p>You cannot change the status of this order.</p>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
+  const buyingOrders = orders.filter(order => order.user_id === currentUser.id);
+  const sellingOrders = orders.filter(order => 
+    order.order_items && order.order_items.some(orderItem => 
+      orderItem?.item?.user_id === currentUser.id
+    )
+  );
+
+  return (
+    <div className="order-list__container">
+      <div className="order-list__row">
+        {/* Buyer Orders */}
+        <div className="order-list__column">
+          <h2 className="order-list__heading">Your Orders</h2>
+          {buyingOrders.length === 0 ? (
+            <p className="order-list__empty-message">You have not placed any orders yet.</p>
+          ) : (
+            <ul className="order-list__orders">
+              {buyingOrders.map(order => (
+                <li key={order.id} className="order-list__order-card">
+                  <p className="order-list__order-id">Order ID: {order.id}</p>
+                  <p className="order-list__order-total">Total: ${order.total}</p>
+                  <p className="order-list__order-status">Status: {order.order_status}</p>
+                  
+                  {order.order_status === 'PENDING' && (
+                    <button 
+                      onClick={() => handleCancelOrder(order.id)} 
+                      className="order-list__cancel-button"
+                    >
+                      Cancel Order
+                    </button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* Seller Orders */}
+        <div className="order-list__column">
+          <h2 className="order-list__heading">Items You've Sold</h2>
+          {sellingOrders.length === 0 ? (
+            <p className="order-list__empty-message">No items sold yet.</p>
+          ) : (
+            <ul className="order-list__orders">
+              {sellingOrders.map(order => (
+                <li key={order.id} className="order-list__order-card">
+                  <p className="order-list__order-id">Order ID: {order.id}</p>
+                  <p className="order-list__order-total">Total: ${order.total}</p>
+                  <p className="order-list__order-status">Status: {order.order_status}</p>
+
+                  <ul className="order-list__sold-items">
+                    {order.order_items
+                      .filter(orderItem => orderItem?.item?.user_id === currentUser.id)
+                      .map(orderItem => (
+                        <li key={orderItem.id} className="order-list__sold-item">
+                          <p>Sold Item: {orderItem.item.name}</p>
+                          <p>Quantity: {orderItem.quantity}</p>
+                          <p>Price: ${orderItem.price}</p>
+                          <img src={orderItem.item.image_url} alt={orderItem.item.name} className="order-list__sold-item-image" />
+                        </li>
+                    ))}
+                  </ul>
+
+                  <select
+                    value={order.order_status}
+                    onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                    className="order-list__status-select"
+                  >
+                    <option value="PENDING">Pending</option>
+                    <option value="SHIPPED">Shipped</option>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="CANCELED">Canceled</option>
+                  </select>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

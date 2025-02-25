@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import { updateReview } from "../../redux/reviews"; // Make sure to import the updateReview action
+import './ReviewUpdate.css'; // Import the CSS file for styles
 
 const UpdateReview = () => {
   const dispatch = useDispatch();
@@ -39,10 +40,10 @@ const UpdateReview = () => {
   };
 
   return (
-    <div>
-      <h2>Update Your Review</h2>
-      <form onSubmit={handleSubmit}>
-        <label>Rating</label>
+    <div className="update-review__container">
+      <h2 className="update-review__heading">Update Your Review</h2>
+      <form onSubmit={handleSubmit} className="update-review__form">
+        <label className="update-review__label">Rating</label>
         <input
           type="number"
           name="rating"
@@ -50,16 +51,18 @@ const UpdateReview = () => {
           min="1"
           max="5"
           onChange={handleChange}
+          className="update-review__input"
         />
 
-        <label>Comment</label>
+        <label className="update-review__label">Comment</label>
         <textarea
           name="comment"
           value={review.comment}
           onChange={handleChange}
+          className="update-review__textarea"
         />
 
-        <button type="submit">Update Review</button>
+        <button type="submit" className="update-review__button">Update Review</button>
       </form>
     </div>
   );
