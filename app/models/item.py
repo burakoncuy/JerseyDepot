@@ -18,7 +18,7 @@ class SizeType(Enum):
     M = "M"
     L = "L"
     XL = "XL"
-    XX = "XXL"
+    XXL = "XXL"
 
 class ItemStatusType(Enum):
     AVAILABLE = "AVAILABLE"

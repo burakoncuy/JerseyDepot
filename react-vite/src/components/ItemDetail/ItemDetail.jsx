@@ -33,6 +33,9 @@ const ItemDetail = () => {
   }, [dispatch, id, user]);
 
   const isFavorite = favorites.some(fav => fav.id === item?.id);
+  
+  // Check if the current user is the owner of this item
+  const isOwner = user && item && user.id === item.user_id;
 
   const handleFavoriteToggle = () => {
     if (!item) return;
@@ -98,14 +101,28 @@ const ItemDetail = () => {
               {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
             </button>
 
-            <button className="review-button" onClick={handleAddReview}>Add Review</button>
+            <button 
+              className="review-button" 
+              onClick={handleAddReview}
+              disabled={isOwner}
+              title={isOwner ? "You cannot review your own item" : ""}
+            >
+              Add Review
+            </button>
 
             <button 
               className="add-to-cart-button"
               onClick={() => handleAddToCart(item.id, item.item_status)}
-              disabled={item.item_status === 'SOLD' || inCart}
+              disabled={item.item_status === 'SOLD' || inCart || isOwner}
+              title={isOwner ? "You cannot add your own item to cart" : ""}
             >
-              {item.item_status === 'SOLD' ? 'Sold Out' : inCart ? 'Item in Cart' : 'Add to Cart'}
+              {item.item_status === 'SOLD' 
+                ? 'Sold Out' 
+                : isOwner 
+                  ? 'Your Item' 
+                  : inCart 
+                    ? 'Item in Cart' 
+                    : 'Add to Cart'}
             </button>
           </div>
         </div>
@@ -114,7 +131,13 @@ const ItemDetail = () => {
       <div className="reviews-section">
         <h3 className="reviews-heading">Reviews</h3>
         {reviews.length === 0 ? (
-          <p className="no-reviews">{user ? 'Be the first to add one!' : 'Login to add a review!'}</p>
+          <p className="no-reviews">
+            {!user 
+              ? 'Login to add a review!' 
+              : isOwner 
+                ? 'You cannot review your own item' 
+                : 'Be the first to add one!'}
+          </p>
         ) : (
           <ul className="review-list">
             {reviews.map((review) => (

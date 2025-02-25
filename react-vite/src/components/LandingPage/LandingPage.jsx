@@ -19,7 +19,7 @@ const LandingPage = () => {
         <div className='landing-container'>
             <div className="landing-content">
                 <h1 className="landing-title">Welcome to NowJersey</h1>
-                <NavLink to='/items' className="landing-button">Want some Jersey?</NavLink>
+                <NavLink to='/items' className="landing-button">Jersey?</NavLink>
                 <button onClick={handleLogin} className="landing-button">Log In</button>
                 <button onClick={handleSignUp} className="landing-button">Sign Up</button>
             </div>

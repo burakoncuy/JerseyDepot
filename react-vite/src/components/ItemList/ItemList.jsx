@@ -19,7 +19,8 @@ const ItemList = () => {
   const [conditionFilter, setConditionFilter] = useState('');
   const [sortOrder, setSortOrder] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-
+  const [confirmationMessage, setConfirmationMessage] = useState({});
+  
   useEffect(() => {
     const loadInitialData = async () => {
       if (user) {
@@ -34,6 +35,11 @@ const ItemList = () => {
     return cartItems.some((cartItem) => cartItem.item_id === itemId);
   };
 
+  // Check if the current user is the owner of an item
+  const isOwner = (item) => {
+    return user && item.user_id === user.id;
+  };
+
   const handleAddToCart = async (itemId, itemStatus) => {
     if (!user) {
       navigate('/login');
@@ -43,10 +49,28 @@ const ItemList = () => {
     if (itemStatus !== 'SOLD' && !isItemInCart(itemId)) {
       try {
         await dispatch(addToCart(itemId, 1));
-        alert('Item added to cart successfully!');
+        setConfirmationMessage({
+          [itemId]: 'Item added to cart successfully!'
+        });
+        setTimeout(() => {
+          setConfirmationMessage((prev) => {
+            const newState = { ...prev };
+            delete newState[itemId]; // Remove the message after 1 seconds
+            return newState;
+          });
+        }, 1000); // Hide message after 1 seconds
       } catch (error) {
         console.error('Failed to add item to cart:', error);
-        alert('Failed to add item to cart. Please try again.');
+        setConfirmationMessage({
+          [itemId]: 'Failed to add item to cart. Please try again.' 
+        });
+        setTimeout(() => {
+          setConfirmationMessage((prev) => {
+            const newState = { ...prev };
+            delete newState[itemId]; // Remove the message after 3 seconds
+            return newState;
+          });
+        }, 3000); // Hide message after 3 seconds
       }
     }
   };
@@ -137,6 +161,7 @@ const ItemList = () => {
       <ul className="item-list-grid">
         {filteredItems.map((item) => {
           const inCart = isItemInCart(item.id);
+          const userOwnsItem = isOwner(item);
           return (
             <li key={item.id} className="item-card">
               <img
@@ -150,13 +175,25 @@ const ItemList = () => {
                 <h3 className="item-name">{item.name}</h3>
                 <p className="item-price">${item.price}</p>
                 {user ? (
-                  <button 
-                    className="add-to-cart-button" 
-                    onClick={() => handleAddToCart(item.id, item.item_status)}
-                    disabled={item.item_status === 'SOLD' || inCart}
-                  >
-                    {item.item_status === 'SOLD' ? 'Sold Out' : inCart ? 'Item in Cart' : 'Add to Cart'}
-                  </button>
+                  <>
+                    <button 
+                      className="add-to-cart-button" 
+                      onClick={() => handleAddToCart(item.id, item.item_status)}
+                      disabled={item.item_status === 'SOLD' || inCart || userOwnsItem}
+                      title={userOwnsItem ? "You cannot add your own item to cart" : ""}
+                    >
+                      {item.item_status === 'SOLD' 
+                        ? 'Sold Out' 
+                        : userOwnsItem 
+                          ? 'Your Item' 
+                          : inCart 
+                            ? 'Item in Cart' 
+                            : 'Add to Cart'}
+                    </button>
+                    {confirmationMessage[item.id] && (
+                      <p className="confirmation-message">{confirmationMessage[item.id]}</p>
+                    )}
+                  </>
                 ) : (
                   <button className="login-to-buy-button" onClick={() => navigate('/')}>Login to Purchase</button>
                 )}
