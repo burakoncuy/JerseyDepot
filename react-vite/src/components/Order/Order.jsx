@@ -2,12 +2,14 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchOrders, updateOrderStatus } from '../../redux/orders';
 import './Order.css'; // Importing the CSS file for styles
+import { useNavigate } from 'react-router';
+
 
 const OrderList = () => {
   const dispatch = useDispatch();
   const orders = useSelector((state) => state.orders.orders);
   const currentUser = useSelector((state) => state.session?.user || null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(fetchOrders());
   }, [dispatch]);
@@ -57,6 +59,12 @@ const OrderList = () => {
                       Cancel Order
                     </button>
                   )}
+                  <button 
+  onClick={() => navigate(`/orders/${order.id}`)} 
+  className="order-list__details-button"
+>
+  View Details
+</button>
                 </li>
               ))}
             </ul>

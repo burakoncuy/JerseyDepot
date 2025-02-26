@@ -16,6 +16,7 @@ import ReviewByCurrentUser from '../components/ReviewByCurrentUser';
 import LandingPage from '../components/LandingPage';
 // import HomePage from '../components/HomePage';
 import OrderList from '../components/Order/Order';
+import OrderDetail from '../components/OrderDetail';
 import Cart from '../components/Cart';
 import Layout from './Layout';
 
@@ -91,6 +92,10 @@ export const router = createBrowserRouter([
       {
         path: "orders",
         element: <OrderList />,
+      },
+      {
+        path: "orders/:id",
+        element: <OrderDetail />,
       },
       {
         path: "cart",

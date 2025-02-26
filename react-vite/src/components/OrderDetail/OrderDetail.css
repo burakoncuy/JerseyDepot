@@ -1,0 +1,65 @@
+.adidas-order-details__container {
+    font-family: 'Arial', sans-serif;
+    background: black;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: auto;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+  }
+  
+  .adidas-order-details__id,
+  .adidas-order-details__total,
+  .adidas-order-details__status {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .adidas-order-details__items-title {
+    margin-top: 15px;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid white;
+    padding-bottom: 5px;
+  }
+  
+  .adidas-order-details__items-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .adidas-order-details__item {
+    background: #222;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+  }
+  
+  .adidas-order-details__item-name,
+  .adidas-order-details__item-quantity,
+  .adidas-order-details__item-price {
+    margin: 5px 0;
+  }
+  
+  .adidas-order-details__item-image {
+    max-width: 100px;
+    border-radius: 5px;
+  }
+  
+  .adidas-order-details__back-button {
+    background: white;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 15px;
+    display: block;
+  }
+  
+  .adidas-order-details__back-button:hover {
+    background: #ddd;
+  }
+  

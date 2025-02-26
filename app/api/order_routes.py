@@ -46,13 +46,18 @@ def view_order(id):
     if not order:
         return {"message": "Order not found."}, 404
 
-    # Include order items in the response
+    # Include order items with their associated item details in the response
     order_items = OrderItem.query.filter_by(order_id=id).all()
     order_details = order.to_dict()
-    order_details['order_items'] = [item.to_dict() for item in order_items]
+    order_details['order_items'] = [
+        {
+            **item.to_dict(),
+            'item': item.item.to_dict()  # Include full item details
+        } 
+        for item in order_items
+    ]
 
     return jsonify(order_details), 200
-
 
 
 ## Create a new order
