@@ -8,33 +8,36 @@ import { fetchCart } from "../../redux/cart";
 
 function Navigation() {
   const dispatch = useDispatch();
-  const favorites = useSelector(state => state.favorites.favorites);
-  const cartItems = useSelector(state => state.cart.cartItems);
-  const user = useSelector(state => state.session.user || {});
+  
+  // Extract only the specific primitive values you need, not whole objects/arrays
+  const favoriteIds = useSelector(state => state.favorites.favorites?.length || 0);
+  const cartItemCount = useSelector(state => state.cart.cartItems?.length || 0);
+  const userId = useSelector(state => state.session.user?.id);
+  const isLoggedIn = Boolean(userId);
 
   useEffect(() => { 
-    if (user.id) {
+    if (isLoggedIn) {
       dispatch(getFavorites());
       dispatch(fetchCart());
     }
-  }, [dispatch, user]);
+  }, [dispatch, isLoggedIn]);
 
   return (
     <nav className="nav-container">
       <div className="nav-content">
         <NavLink to="/items" className="nav-logo">NowJersey</NavLink>
         <div className="nav-links">
-          {user.id && <NavLink to='/orders' className="nav-item">My Orders</NavLink>}
-          {user.id && <NavLink to='/items/current' className="nav-item">My Items</NavLink>}
-          {user.id && <NavLink to='/reviews/current' className="nav-item">My Reviews</NavLink>}
-          {user.id && (
-            <NavLink to='/items/favorites' className={`nav-item ${favorites.length > 0 ? 'nav-highlight' : ''}`}>
-              ❤️  <span className="nav-badge-heart">{favorites.length}</span>
+          {isLoggedIn && <NavLink to='/orders' className="nav-item">My Orders</NavLink>}
+          {isLoggedIn && <NavLink to='/items/current' className="nav-item">My Items</NavLink>}
+          {isLoggedIn && <NavLink to='/reviews/current' className="nav-item">My Reviews</NavLink>}
+          {isLoggedIn && (
+            <NavLink to='/items/favorites' className={`nav-item ${favoriteIds > 0 ? 'nav-highlight' : ''}`}>
+              ❤️  <span className="nav-badge-heart">{favoriteIds}</span>
             </NavLink>
           )}
-          {user.id && (
-            <NavLink to='/cart' className={`nav-item ${cartItems.length > 0 ? 'nav-highlight' : ''}`}>
-              <span className="cart-icon">🛒</span>  <span className="nav-badge-cart">{cartItems.length}</span>
+          {isLoggedIn && (
+            <NavLink to='/cart' className={`nav-item ${cartItemCount > 0 ? 'nav-highlight' : ''}`}>
+              <span className="cart-icon">🛒</span>  <span className="nav-badge-cart">{cartItemCount}</span>
             </NavLink>
           )}
           <ProfileButton />
