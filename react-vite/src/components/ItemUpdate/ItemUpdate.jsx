@@ -60,15 +60,19 @@ const ItemUpdate = () => {
         const newErrors = {};
 
         // Name Validation
-        if (!formData.name) newErrors.name = "Name is required.";
+        if (!formData.name) {
+            newErrors.name = "Name is required.";
+        } else if (!isNaN(formData.name)) {
+            newErrors.name = "Name should be a valid string, not a number.";
+        }
 
         // Description Validation
         if (formData.description.length < 5)
             newErrors.description = "Description must be at least 5 characters.";
 
         // Price Validation
-        if (formData.price <= 0)
-            newErrors.price = "Price must be greater than 0.";
+        if (formData.price <= 0 || isNaN(formData.price))
+            newErrors.price = "Price must be a valid number greater than 0.";
 
         // Image URL Validation
         const urlPattern = /^(https?:\/\/[^\s$.?#].[^\s]*$)/;

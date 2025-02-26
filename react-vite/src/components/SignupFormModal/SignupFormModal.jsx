@@ -23,21 +23,34 @@ function SignupFormModal() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Confirm Password Validation
     if (password !== confirmPassword) {
       return setErrors({
-        confirmPassword:
-          "Confirm Password field must be the same as the Password field",
+        confirmPassword: "Confirm Password field must be the same as the Password field",
       });
     }
 
-    if (password.length < 6) return setErrors({ password: "Password must be minimum 6 characters" });
- 
-    if (username.length < 3) return setErrors({ username: "Username must be minimum 3 characters" });
+    // Password Length Validation
+    if (password.length < 6) {
+      return setErrors({ password: "Password must be minimum 6 characters" });
+    }
 
+    // Username Length Validation
+    if (username.length < 3) {
+      return setErrors({ username: "Username must be minimum 3 characters" });
+    }
+
+    // Username Should Not Be a Number Validation
+    if (!isNaN(username)) {
+      return setErrors({ username: "Username should not be a number." });
+    }
+
+    // Email Validation
     if (!validateEmail(email)) {
       return setErrors({ email: "Please enter a valid email address" });
     }
 
+    // Dispatch Signup Action
     const serverResponse = await dispatch(
       thunkSignup({
         email,

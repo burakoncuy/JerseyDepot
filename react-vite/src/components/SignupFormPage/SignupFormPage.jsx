@@ -15,28 +15,62 @@ function SignupFormPage() {
 
   if (sessionUser) return <Navigate to="/" replace={true} />;
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Required field validation
+    if (!email) {
+      newErrors.email = "Email is required.";
+    } else if (!validateEmail(email)) {
+      newErrors.email = "Please enter a valid email address.";
+    }
+
+    if (!username) {
+      newErrors.username = "Username is required.";
+    } else if (username.length < 3) {
+      newErrors.username = "Username must be at least 3 characters.";
+    } else if (!isNaN(username)) {
+      newErrors.username = "Username should not be a number.";
+    }
+
+    if (!password) {
+      newErrors.password = "Password is required.";
+    } else if (password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters.";
+    }
+
+    if (!confirmPassword) {
+      newErrors.confirmPassword = "Confirm Password is required.";
+    } else if (confirmPassword !== password) {
+      newErrors.confirmPassword = "Confirm Password must match Password.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
-      return setErrors({
-        confirmPassword:
-          "Confirm Password field must be the same as the Password field",
-      });
-    }
+    if (validateForm()) {
+      const serverResponse = await dispatch(
+        thunkSignup({
+          email,
+          username,
+          password,
+        })
+      );
 
-    const serverResponse = await dispatch(
-      thunkSignup({
-        email,
-        username,
-        password,
-      })
-    );
-
-    if (serverResponse) {
-      setErrors(serverResponse);
-    } else {
-      navigate("/");
+      if (serverResponse) {
+        setErrors(serverResponse);
+      } else {
+        navigate("/");
+      }
     }
   };
 
@@ -55,6 +89,7 @@ function SignupFormPage() {
           />
         </label>
         {errors.email && <p>{errors.email}</p>}
+
         <label>
           Username
           <input
@@ -65,6 +100,7 @@ function SignupFormPage() {
           />
         </label>
         {errors.username && <p>{errors.username}</p>}
+
         <label>
           Password
           <input
@@ -75,6 +111,7 @@ function SignupFormPage() {
           />
         </label>
         {errors.password && <p>{errors.password}</p>}
+
         <label>
           Confirm Password
           <input
@@ -85,6 +122,7 @@ function SignupFormPage() {
           />
         </label>
         {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
+
         <button type="submit">Sign Up</button>
       </form>
     </>
