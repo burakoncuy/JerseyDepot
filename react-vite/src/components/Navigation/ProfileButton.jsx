@@ -47,17 +47,17 @@ function ProfileButton() {
 
   return (
     <>
-      <button onClick={toggleMenu} className="profile-button__icon">
+      <button onClick={toggleMenu} className="profile-button__icon-page">
         <FaUserCircle />
       </button>
       {showMenu && (
-        <ul className="profile-button__dropdown" ref={ulRef}>
+        <ul className="profile-button__dropdown-menu-page" ref={ulRef}>
           {user ? (
             <>
-              <li className="profile-button__item">{user.username}</li>
-              <li className="profile-button__item">{user.email}</li>
+              <li className="profile-button__menu-item-page">{user.username}</li>
+              <li className="profile-button__menu-item-page">{user.email}</li>
               <li>
-                <button onClick={logout} className="profile-button__logout">
+                <button onClick={logout} className="profile-button__logout-button-page">
                   Log Out
                 </button>
               </li>
@@ -74,7 +74,6 @@ function ProfileButton() {
                 onItemClick={closeMenu}
                 modalComponent={<SignupFormModal />}
               />
-
             </>
           )}
         </ul>

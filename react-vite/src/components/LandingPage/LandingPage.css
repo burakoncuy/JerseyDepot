@@ -11,12 +11,12 @@
 
 /* Content Styling */
 .landing-content {
-  background: rgba(0, 0, 0, 0.8);
+  /* background: rgba(0, 0, 0, 0.8); */
   padding: 40px;
   border-radius: 10px;
   max-width: 500px;
   width: 90%;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); */
 }
 
 /* Title */
@@ -77,3 +77,4 @@
     max-width: 200px; /* Adjust button size on smaller screens */
   }
 }
+
