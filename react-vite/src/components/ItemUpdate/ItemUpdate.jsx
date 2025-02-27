@@ -67,8 +67,11 @@ const ItemUpdate = () => {
         }
 
         // Description Validation
-        if (formData.description.length < 5)
+        if (formData.description.length < 5) {
             newErrors.description = "Description must be at least 5 characters.";
+        } else if (!isNaN(formData.description)) {
+            newErrors.description = "Description should be a valid string, not a number.";
+        }
 
         // Price Validation
         if (formData.price <= 0 || isNaN(formData.price))

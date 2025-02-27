@@ -33,12 +33,18 @@ export const addToCart = (itemId, quantity) => async (dispatch) => {
       credentials: 'include',
       body: JSON.stringify({ item_id: itemId, quantity }),
     });
-    const cartItem = await response.json();
-    dispatch({ type: ADD_TO_CART, payload: cartItem });
-    return cartItem; // Return the added cart item
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to add item to cart.");
+    }
+
+    dispatch({ type: ADD_TO_CART, payload: data });
+    return data; // Return the added cart item
   } catch (error) {
-    console.error('Error adding to cart:', error);
-    throw error; // Throw error to handle it in the component
+    console.error('Error adding to cart:', error.message);
+    throw error; // Propagate error to be handled in the component
   }
 };
 

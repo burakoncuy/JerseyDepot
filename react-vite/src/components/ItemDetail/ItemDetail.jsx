@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getItem } from '../../redux/items';
@@ -11,6 +11,7 @@ const ItemDetail = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
+  const [showCartConfirmation, setShowCartConfirmation] = useState(false);
 
   const { item, notFound, error } = useSelector(state => state.items);
   const reviews = useSelector(state => state.reviews.reviews);
@@ -54,17 +55,40 @@ const ItemDetail = () => {
     navigate(`/items/${item.id}/reviews`);
   };
 
-  const handleAddToCart = async (itemId, itemStatus) => {
+  const handleAddToCart = async (itemId, itemStatus, sellerId) => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+  
+    // Check if the cart is not empty and contains items from a different seller
+    if (cartItems.length > 0) {
+      const existingSellerId = cartItems[0].item.user_id; // Get seller ID from first item
+      if (existingSellerId !== sellerId) {
+        alert("You can only add items from one seller at a time. Please clear your cart first.");
+        return;
+      }
+    }
+  
     if (itemStatus !== 'SOLD' && !cartItems.some(cartItem => cartItem.item_id === itemId)) {
       try {
         await dispatch(addToCart(itemId, 1));
         await dispatch(fetchCart());
+        
+        // Show confirmation message
+        setShowCartConfirmation(true);
+        
+        // Hide confirmation message after 3 seconds
+        setTimeout(() => {
+          setShowCartConfirmation(false);
+        }, 3000);
       } catch (error) {
         console.error('Failed to add item to cart:', error);
         alert('Failed to add item to cart. Please try again.');
       }
     }
   };
+  
 
   // Star Rating component
   const StarRating = ({ rating }) => {
@@ -131,7 +155,7 @@ const ItemDetail = () => {
 
             <button 
               className="add-to-cart-button"
-              onClick={() => handleAddToCart(item.id, item.item_status)}
+              onClick={() => handleAddToCart(item.id, item.item_status, item.user_id)}
               disabled={item.item_status === 'SOLD' || inCart || isOwner}
               title={isOwner ? "You cannot add your own item to cart" : ""}
             >
@@ -143,6 +167,12 @@ const ItemDetail = () => {
                     ? 'Item in Cart' 
                     : 'Add to Cart'}
             </button>
+            
+            {showCartConfirmation && (
+              <div className="cart-confirmation-message">
+                Item added to cart successfully!
+              </div>
+            )}
           </div>
         </div>
       </div>

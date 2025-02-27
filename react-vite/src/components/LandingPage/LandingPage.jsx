@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useModal } from '../../context/Modal';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
-import logo from '../../../public/logo.png';
+import logo from '../../../src/logo.png';
 
 const LandingPage = () => { 
     const { setModalContent } = useModal();
