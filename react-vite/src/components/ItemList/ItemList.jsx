@@ -159,8 +159,6 @@ const ItemList = () => {
 
   return (
     <div className="item-list-container">
-      {/* <h2 className="item-list-heading">Jerseys</h2> */}
-      
       <div className="filters">
         <input 
           type="text" 
@@ -196,16 +194,19 @@ const ItemList = () => {
           <option value="NEW">New</option>
           <option value="USED">Used</option>
         </select>
-        
-        {/* Seller Filter with Usernames */}
-        <select value={sellerFilter} onChange={(e) => setSellerFilter(e.target.value)}>
-          <option value="">All Stores</option>
-          {sellers.map(sellerId => (
-            <option key={sellerId} value={sellerId.toString()}>
-              {users[sellerId] || `Seller ${sellerId}`}
-            </option>
-          ))}
-        </select>
+
+        {user && (
+          <>
+            <select value={sellerFilter} onChange={(e) => setSellerFilter(e.target.value)}>
+              <option value="">All Stores</option>
+              {sellers.map(sellerId => (
+                <option key={sellerId} value={sellerId.toString()}>
+                  {users[sellerId] || `Seller ${sellerId}`}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
 
         <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
           <option value="">Sort By Price</option>
@@ -232,10 +233,11 @@ const ItemList = () => {
               <div className="item-details">
                 <h3 className="item-name">{item.name}</h3>
                 <p className="item-price">${item.price}</p>
-                {/* Display seller username */}
-                <p className="item-seller">
-                  Store: {users[item.user_id] || `Seller ${item.user_id}`}
-                </p>
+                {user && (
+                  <p className="item-seller">
+                    Store: {users[item.user_id] || `Seller ${item.user_id}`}
+                  </p>
+                )}
                 {user ? (
                   <>
                     <button 
