@@ -28,7 +28,7 @@ function Navigation() {
         <NavLink to="/items" className="nav-logo">NowJersey</NavLink>
         <div className="nav-links">
           {isLoggedIn && <NavLink to='/orders' className="nav-item">My Orders</NavLink>}
-          {isLoggedIn && <NavLink to='/items/current' className="nav-item">My Items</NavLink>}
+          {isLoggedIn && <NavLink to='/items/current' className="nav-item">My Store</NavLink>}
           {isLoggedIn && <NavLink to='/reviews/current' className="nav-item">My Reviews</NavLink>}
           {isLoggedIn && (
             <NavLink to='/items/favorites' className={`nav-item ${favoriteIds > 0 ? 'nav-highlight' : ''}`}>

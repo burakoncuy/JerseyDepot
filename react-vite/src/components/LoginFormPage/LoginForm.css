@@ -1,59 +1,92 @@
-/* LoginForm.css */
+/* Main container for login form */
+.login-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #f4f4f4;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  margin: 40px auto;
+}
 
-.main-login {
-    /* Style for your login modal container */
-    max-width: 400px;
-    margin: auto;
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-  }
-  
-  .main-login h1 {
-    padding-bottom: 30px;
-    text-align: center;
-    color: #333;
-  }
-  
-  .main-login label {
-    display: block;
-    margin-bottom: 10px;
-  }
-  
-  .main-login input {
-    width: 90%;
-    padding: 10px;
-    margin-bottom: 5px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .main-login button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 20px;
-  }
-  .main-login button:hover {
-    background-color: blue;
-  }
-  
-  /* Error message styling */
-  .error-mes {
-    position: absolute;
-    top: 70px;
-    color: red;
-    font-size: 0.8em;
-   
-  }
-  
-.error-mesa { 
-    position: absolute;
-    top: 90px;
-    color: red;
-    font-size: 0.8em;
+/* Title */
+.login-form-title {
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+  color: #222;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+}
+
+/* Form styling */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.input-label {
+  font-size: 1rem;
+  margin-bottom: 8px;
+  color: #444;
+  font-weight: 500;
+}
+
+.input-field {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  width: 100%;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #0073e6;
+  box-shadow: 0 0 5px rgba(0, 115, 230, 0.5);
+}
+
+/* Error styling */
+.error-message {
+  color: #e53935;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.error-text {
+  font-size: 0.9rem;
+  color: #e53935;
+  margin-top: 5px;
+  font-weight: 400;
+}
+
+/* Button */
+.submit-button {
+  padding: 12px;
+  background-color: #0073e6;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+.submit-button:hover {
+  background-color: #005bb5;
+}
+
+.submit-button:active {
+  background-color: #00458b;
 }

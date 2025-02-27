@@ -32,33 +32,37 @@ def view_cart():
 @cart_routes.route("", methods=["POST"])
 @login_required
 def add_to_cart():
-    # Get data from the request body
     item_id = request.json.get('item_id')
-    quantity = request.json.get('quantity', 1)  # Default to 1 if quantity is not provided
-    # size = request.json.get('size')
-    
-    # Check if the item exists
+    quantity = request.json.get('quantity', 1)
+
     item = Item.query.get(item_id)
     if not item:
         return {"message": "Item not found."}, 404
 
-    # Check if the item is already in the user's cart
+    # Check if the user's cart already has items
+    user_cart_items = Cart.query.filter_by(user_id=current_user.id).all()
+
+    if user_cart_items:
+        # Get the seller ID of the first item in the cart
+        existing_seller_id = user_cart_items[0].item.user_id  
+
+        # If the new item has a different seller, prevent adding it
+        if item.user_id != existing_seller_id:
+            return {"message": "You can only add items from one seller at a time. Please clear your cart first."}, 400
+
+    # Check if item is already in cart
     existing_item = Cart.query.filter_by(user_id=current_user.id, item_id=item_id).first()
     if existing_item:
-        # If the item exists, increase the quantity
         existing_item.quantity += quantity
         db.session.commit()
         return jsonify(existing_item.to_dict()), 200
 
-    # Create a new cart item if it doesn't exist
     new_cart_item = Cart(
         user_id=current_user.id,
         item_id=item_id,
         quantity=quantity,
-        # size=size
     )
 
-    # Add to the database and commit
     db.session.add(new_cart_item)
     db.session.commit()
 

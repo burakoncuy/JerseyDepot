@@ -17,9 +17,14 @@ const ItemList = () => {
   const [statusFilter, setStatusFilter] = useState('');
   const [sizeFilter, setSizeFilter] = useState('');
   const [conditionFilter, setConditionFilter] = useState('');
+  const [sellerFilter, setSellerFilter] = useState('');
   const [sortOrder, setSortOrder] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmationMessage, setConfirmationMessage] = useState({});
+  const [users, setUsers] = useState({});
+  
+  // Get unique sellers from items
+  const sellers = [...new Set(items.map(item => item.user_id))];
   
   useEffect(() => {
     const loadInitialData = async () => {
@@ -27,6 +32,22 @@ const ItemList = () => {
         await dispatch(fetchCart());
       }
       await dispatch(getItems());
+      
+      // Fetch all users to get usernames
+      try {
+        const response = await fetch('/api/users/');
+        if (response.ok) {
+          const data = await response.json();
+          // Create a map of user IDs to usernames
+          const userMap = {};
+          data.users.forEach(user => {
+            userMap[user.id] = user.username;
+          });
+          setUsers(userMap);
+        }
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+      }
     };
     loadInitialData();
   }, [dispatch, user]);
@@ -40,37 +61,63 @@ const ItemList = () => {
     return user && item.user_id === user.id;
   };
 
-  const handleAddToCart = async (itemId, itemStatus) => {
+  const handleAddToCart = async (itemId, itemStatus, sellerId) => {
     if (!user) {
       navigate('/login');
       return;
     }
-
+  
+    // Check if cart has items from a different seller
+    if (cartItems.length > 0) {
+      // Safely get the seller ID by checking the structure
+      let existingSellerId;
+      
+      // Check different possible structures of cartItems
+      if (cartItems[0].item && cartItems[0].item.user_id !== undefined) {
+        existingSellerId = cartItems[0].item.user_id;
+      } else if (cartItems[0].user_id !== undefined) {
+        existingSellerId = cartItems[0].user_id;
+      } else {
+        // If we can't determine the seller ID, we'll need to fetch the cart again
+        try {
+          await dispatch(fetchCart());
+          // Rather than recursively calling, just proceed with the add
+          // We'll check on the next attempt if needed
+        } catch (error) {
+          console.error("Failed to refresh cart data:", error);
+        }
+      }
+      
+      // Only check seller ID if we found one
+      if (existingSellerId !== undefined && existingSellerId !== sellerId) {
+        alert("You can only add items from one seller at a time. Please clear your cart first.");
+        return;
+      }
+    }
+  
     if (itemStatus !== 'SOLD' && !isItemInCart(itemId)) {
       try {
         await dispatch(addToCart(itemId, 1));
-        setConfirmationMessage({
-          [itemId]: 'Item added to cart successfully!'
-        });
+        await dispatch(fetchCart()); // Refresh cart after adding
+        setConfirmationMessage({ [itemId]: 'Item added to cart successfully!' });
+  
         setTimeout(() => {
           setConfirmationMessage((prev) => {
             const newState = { ...prev };
-            delete newState[itemId]; // Remove the message after 1 seconds
+            delete newState[itemId];
             return newState;
           });
-        }, 1000); // Hide message after 1 seconds
+        }, 1000);
       } catch (error) {
-        console.error('Failed to add item to cart:', error);
-        setConfirmationMessage({
-          [itemId]: 'Failed to add item to cart. Please try again.' 
-        });
+        setConfirmationMessage({ [itemId]: error.message || "Failed to add item to cart" });
+  
         setTimeout(() => {
           setConfirmationMessage((prev) => {
             const newState = { ...prev };
-            delete newState[itemId]; // Remove the message after 3 seconds
+            delete newState[itemId];
             return newState;
           });
-        }, 3000); // Hide message after 3 seconds
+        }, 3000);
       }
     }
   };
@@ -90,6 +137,7 @@ const ItemList = () => {
     setStatusFilter('');
     setSizeFilter('');
     setConditionFilter('');
+    setSellerFilter('');
     setSortOrder('');
     setSearchQuery('');
   };
@@ -99,6 +147,7 @@ const ItemList = () => {
     (statusFilter ? item.item_status === statusFilter : true) &&
     (sizeFilter ? item.size === sizeFilter : true) &&
     (conditionFilter ? item.condition === conditionFilter : true) &&
+    (sellerFilter ? item.user_id.toString() === sellerFilter : true) &&
     (searchQuery ? item.name.toLowerCase().includes(searchQuery.toLowerCase()) : true)
   ));
 
@@ -140,13 +189,22 @@ const ItemList = () => {
           <option value="M">M</option>
           <option value="L">L</option>
           <option value="XL">XL</option>
-          <option value="XXL">XXL</option>
         </select>
 
         <select value={conditionFilter} onChange={(e) => setConditionFilter(e.target.value)}>
           <option value="">All Conditions</option>
           <option value="NEW">New</option>
           <option value="USED">Used</option>
+        </select>
+        
+        {/* Seller Filter with Usernames */}
+        <select value={sellerFilter} onChange={(e) => setSellerFilter(e.target.value)}>
+          <option value="">All Stores</option>
+          {sellers.map(sellerId => (
+            <option key={sellerId} value={sellerId.toString()}>
+              {users[sellerId] || `Seller ${sellerId}`}
+            </option>
+          ))}
         </select>
 
         <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
@@ -174,11 +232,15 @@ const ItemList = () => {
               <div className="item-details">
                 <h3 className="item-name">{item.name}</h3>
                 <p className="item-price">${item.price}</p>
+                {/* Display seller username */}
+                <p className="item-seller">
+                  Store: {users[item.user_id] || `Seller ${item.user_id}`}
+                </p>
                 {user ? (
                   <>
                     <button 
                       className="add-to-cart-button" 
-                      onClick={() => handleAddToCart(item.id, item.item_status)}
+                      onClick={() => handleAddToCart(item.id, item.item_status, item.user_id)}
                       disabled={item.item_status === 'SOLD' || inCart || userOwnsItem}
                       title={userOwnsItem ? "You cannot add your own item to cart" : ""}
                     >

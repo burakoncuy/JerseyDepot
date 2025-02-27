@@ -21,10 +21,12 @@ const AddReview = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Comment Validation
-    if (review.comment.length < 5) {
-      newErrors.comment = "Comment must be at least 5 characters.";
-    }
+   // Comment Validation
+   if (review.comment.length < 5) {
+    newErrors.comment = "Comment must be at least 5 characters.";
+  } else if (!isNaN(review.comment.trim())) {
+    newErrors.comment = "Comment cannot be just a number.";
+  }
 
     setErrors(newErrors);
 

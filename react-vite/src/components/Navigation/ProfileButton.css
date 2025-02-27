@@ -4,13 +4,13 @@
     border: none;
     color: #333;
     font-size: 24px;
-    cursor: pointer;
+    cursor:pointer;
     transition: transform 0.3s ease, color 0.3s ease;
   }
   
   .profile-button__icon:hover {
     transform: scale(1.1);
-    color: blue;
+    color: white;
   }
   
   /* Dropdown Menu */
