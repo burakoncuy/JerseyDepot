@@ -27,6 +27,10 @@ sqlalchemy = "==1.4.46"
 werkzeug = "==2.2.2"
 wtforms = "==3.0.1"
 zipp = "==3.17.0"
+boto3 = "*"
+botocore = "*"
+s3transfer = "*"
+urllib3 = "*"
 
 [dev-packages]
 
