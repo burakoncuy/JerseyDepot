@@ -22,17 +22,17 @@ const ItemList = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [confirmationMessage, setConfirmationMessage] = useState({});
   const [users, setUsers] = useState({});
-  
+
   // Get unique sellers from items
   const sellers = [...new Set(items.map(item => item.user_id))];
-  
+
   useEffect(() => {
     const loadInitialData = async () => {
       if (user) {
         await dispatch(fetchCart());
       }
       await dispatch(getItems());
-      
+
       // Fetch all users to get usernames
       try {
         const response = await fetch('/api/users/');
@@ -66,41 +66,35 @@ const ItemList = () => {
       navigate('/login');
       return;
     }
-  
+
     // Check if cart has items from a different seller
     if (cartItems.length > 0) {
-      // Safely get the seller ID by checking the structure
       let existingSellerId;
-      
-      // Check different possible structures of cartItems
+
       if (cartItems[0].item && cartItems[0].item.user_id !== undefined) {
         existingSellerId = cartItems[0].item.user_id;
       } else if (cartItems[0].user_id !== undefined) {
         existingSellerId = cartItems[0].user_id;
       } else {
-        // If we can't determine the seller ID, we'll need to fetch the cart again
         try {
           await dispatch(fetchCart());
-          // Rather than recursively calling, just proceed with the add
-          // We'll check on the next attempt if needed
         } catch (error) {
           console.error("Failed to refresh cart data:", error);
         }
       }
-      
-      // Only check seller ID if we found one
+
       if (existingSellerId !== undefined && existingSellerId !== sellerId) {
         alert("You can only add items from one seller at a time. Please clear your cart first.");
         return;
       }
     }
-  
+
     if (itemStatus !== 'SOLD' && !isItemInCart(itemId)) {
       try {
         await dispatch(addToCart(itemId, 1));
-        await dispatch(fetchCart()); // Refresh cart after adding
+        await dispatch(fetchCart());
         setConfirmationMessage({ [itemId]: 'Item added to cart successfully!' });
-  
+
         setTimeout(() => {
           setConfirmationMessage((prev) => {
             const newState = { ...prev };
@@ -110,7 +104,7 @@ const ItemList = () => {
         }, 1000);
       } catch (error) {
         setConfirmationMessage({ [itemId]: error.message || "Failed to add item to cart" });
-  
+
         setTimeout(() => {
           setConfirmationMessage((prev) => {
             const newState = { ...prev };
@@ -159,8 +153,6 @@ const ItemList = () => {
 
   return (
     <div className="item-list-container">
-      {/* <h2 className="item-list-heading">Jerseys</h2> */}
-      
       <div className="filters">
         <input 
           type="text" 
@@ -196,16 +188,17 @@ const ItemList = () => {
           <option value="NEW">New</option>
           <option value="USED">Used</option>
         </select>
-        
-        {/* Seller Filter with Usernames */}
-        <select value={sellerFilter} onChange={(e) => setSellerFilter(e.target.value)}>
-          <option value="">All Stores</option>
-          {sellers.map(sellerId => (
-            <option key={sellerId} value={sellerId.toString()}>
-              {users[sellerId] || `Seller ${sellerId}`}
-            </option>
-          ))}
-        </select>
+
+        {user && (
+          <select value={sellerFilter} onChange={(e) => setSellerFilter(e.target.value)}>
+            <option value="">All Stores</option>
+            {sellers.map(sellerId => (
+              <option key={sellerId} value={sellerId.toString()}>
+                {users[sellerId] || `Seller ${sellerId}`}
+              </option>
+            ))}
+          </select>
+        )}
 
         <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
           <option value="">Sort By Price</option>
@@ -232,10 +225,11 @@ const ItemList = () => {
               <div className="item-details">
                 <h3 className="item-name">{item.name}</h3>
                 <p className="item-price">${item.price}</p>
-                {/* Display seller username */}
-                <p className="item-seller">
-                  Store: {users[item.user_id] || `Seller ${item.user_id}`}
-                </p>
+                {user && (
+                  <p className="item-seller">
+                    Store: {users[item.user_id] || `Seller ${item.user_id}`}
+                  </p>
+                )}
                 {user ? (
                   <>
                     <button 
