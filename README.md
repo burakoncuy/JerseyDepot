@@ -4,7 +4,7 @@ NowJersey is a platform that connects sports enthusiasts with buyers and sellers
 
 # Live Link
 
-https://nowjersey.onrender.com/
+[NowJersey](https://nowjersey.onrender.com/)
 
 ## Tech Stack
 ### Frameworks and Libraries
@@ -16,95 +16,124 @@ https://nowjersey.onrender.com/
  ### Hosting:
  ![Render](https://img.shields.io/badge/Render-%46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)
 
+
 # Index
-[Visit the Wiki](https://github.com/burakoncuy/NowJersey/wiki)
-
-
-
+- [Database Schema][database-schema]
+- [Future List][future-list]
+- [User Stories][user-stories]
+- [Wireframes][wireframes]
 
 <!-- Reference-style link definitions -->
-[database-schema]: https://github.com/Azadcelik/project-trial/wiki/Database-Schema
-[future-list]: https://github.com/Azadcelik/project-trial/wiki/Future-List
-[user-stories]: https://github.com/Azadcelik/project-trial/wiki/User-Stories
-[wireframes]: https://github.com/Azadcelik/project-trial/wiki/Wireframes
-
-# Landing Page
-
-![NowJersey-project](/react-vite/public/gif/NowJersey-project-ezgif.com-video-to-gif-converter.gif)
+[database-schema]: https://github.com/burakoncuy/NowJersey/wiki/DATABASE-SCHEMA
+[future-list]: https://github.com/burakoncuy/NowJersey/wiki/MVP's-FEATURE-LIST
+[user-stories]: https://github.com/burakoncuy/NowJersey/wiki/USER-STORIES
+[wireframes]: https://github.com/burakoncuy/NowJersey/wiki/WIREFRAMES
 
 
 # Endpoints
 
 
-## Auth
 
-| Request | Purpose | Return Value |
-| ------- | ------- | ------------ |
-| `GET /api/auth/` | Checks current user session | `{'id': INT, 'username': STRING, 'email': STRING}` |
-| `POST /api/auth/unauthorized` | Handles unauthorized access | `{'errors': ARRAY[STRINGS]}` |
-| `POST /api/auth/signup` | Processes new user registration | `{'id': INT, 'username': STRING, 'email': STRING}` |
-| `POST /api/auth/login` | Attempts to log in a user | `{'id': INT, 'username': STRING, 'email': STRING}` |
-| `POST /api/auth/logout` | Logs out the current user | `{'message': STRING}` |
+## User Auth Sign in and Sign Up
 
+Users can log into an existing account or sign up and create a new account. Users can also test the site with the Demo Login feature.
+![Splash page](./react-vite/public/splash.png)
+![Demo-user page](./react-vite/public/demo-user.png)
+![Login page](./react-vite/public/login.png)
+![Sign up page](./react-vite/public/signup.png)
 
-## Product
+## Users can view all listing items and make search or filtering based on categories, price, size, status,condition, store and add to Cart.
 
-| Request | Purpose | Return Value |
-| ------- | ------- | ------------ |
-| `GET /api/products/:id` | Retrieves a specific product by ID | `{"id": INT, "user_id": INT, "image": STRING, "make": STRING, "mileage": INT, "model": STRING, "year": INT, "price": FLOAT, "type": STRING,"created_at":DATE}`|
-| `POST /api/products` | Creates a new product  | `{"id": INT, "user_id": INT, "image": STRING, "make": STRING, "mileage": INT, "model": STRING, "year": INT, "price": FLOAT, "type": STRING, "created_at": DATE}` |
-| `PUT /api/products/:id` | Updates a specific product by ID  | `{"id": INT, "user_id": INT, "image": STRING, "make": STRING, "mileage": INT, "model": STRING, "year": INT, "price": FLOAT, "type": STRING}` |
-| `DELETE /api/products/:id` | Deletes a specific product by ID  | `{"message": "successfully deleted"}` |
+![All items page](./react-vite/public/user-landing.png)
 
+## Users can create , update and delete their own items.
+![Manage items](./react-vite/public/manage.png)
+![Create an item](./react-vite/public/create.png)
+![Update an item](./react-vite/public/update.png)
 
-## Review
+## Users can view item's details can add to cart or add to favorite and add a review.
 
-| Request | Purpose | Return Value |
-| ------- | ------- | ------------ |
-| `GET /api/products/:id/reviews` | Retrieves all reviews for a specific product | `[{ "review": {"id": INT, "user_id": INT, "product_id": INT, "text_body": STRING, "star_rating": INT, "created_at": DATE}, "product":{Product details}, "user": {User details} }]` |
-| `POST /api/products/:id/new-review` | Adds a new review to a specific product (Auth required)  | `{ "review": {"id": INT, "user_id": INT, "product_id": INT, "text_body": STRING, "star_rating": INT, "created_at": DATE}, "product": {Product details}, "user": {User details} }` |
-| `DELETE /api/reviews/:id` | Deletes a specific review by ID (Auth required)  | `{"message": "Review successfully deleted"}` |
+![Item detail](./react-vite/public/detail.png)
 
+## Users can view their favorites and remove them from favorites
 
-## Shopping Cart
+![Item detail](./react-vite/public/favorites.png)
 
-| Request | Purpose | Return Value |
-| ------- | ------- | ------------ |
-| `POST /api/shopping_cart/add-to-cart/<int:id>` | Adds a product to the shopping cart (Auth required) | `{ "productDetails": {"id": INT, "name": STRING, "model": STRING, "year": INT, "price": FLOAT, "quantity": INT} }` |
-| `GET /api/shopping_cart/` | Retrieves the current user's shopping cart (Auth required) | `[{ "id": INT, "product_id": INT, "image": STRING, "name": STRING, "price": FLOAT, "model": STRING, "year": INT, "quantity": INT }]`|
-| `DELETE /api/shopping_cart/<int:id>` | Removes an item from the shopping cart (Auth required) | `{"message": "successfully deleted"}` |
+## Users can list their reviews and update or delete them .
 
+![Manage reviews](./react-vite/public/review.png)
+![Update review](./react-vite/public/reviewupdate.png)
 
-## Favorites
+## Cart
 
-| Request | Purpose | Return Value |
-| ------- | ------- | ------------ |
-| `POST /api/products/:id/add-favorite` | Adds a product to favorites (Auth required) | `{ "id": INT, "user_id": INT, "image": STRING, "make": STRING, "mileage": INT, "model": STRING, "year": INT, "price": FLOAT, "type": STRING, "created_at": DATE }` |
-| `GET /api/products/favorites` | Retrieves the user's favorite products (Auth required) | `[{ "id": INT, "user_id": INT, "image": STRING, "make": STRING, "mileage": INT, "model": STRING, "year": INT, "price": FLOAT, "type": STRING, "created_at": DATE }]` |
-| `DELETE /api/products/:id/remove-favorite` | Removes a product from favorites (Auth required) | `{"message": "product removed from your favorites"}` |
+Users can add items by clicking on add to cart and view, remove items and check out in the shopping cart.
 
-
-## Product Images
-
-| Request | Purpose | Return Value |
-| ------- | ------- | ------------ |
-| `POST /api/product_images/<int:id>/images` | Adds multiple images to a product (Auth required) | `{ "images": [{"product_id": INT, "url": STRING, "created_at": DATE}] }` |
-| `GET /api/product_images/<int:id>/images` | Retrieves all images for a specific product | `{ "images": [{"product_id": INT, "url": STRING, "created_at": DATE}] }` |
-| `DELETE /api/product_images/<int:id>/images/delete` | Deletes all images of a product | `{"message": "Successfully deleted"}` |
-
+![View user's cart](./react-vite/public/cart.png)
 
 ## Order
 
-| Request | Purpose | Return Value |
-| ------- | ------- | ------------ |
-| `POST /api/orders` | Creates a new order (Auth required) | `{ "order_id": INT, "total_price": FLOAT }` |
-| `GET /api/orders` | Retrieves the order history of the current user (Auth required) | `[{ "order_id": INT, "order_date": DATE, "total_price": FLOAT, "country": STRING, "full_name": STRING, "street_address": STRING, "apartment": STRING, "city": STRING, "zip_code": STRING, "items": [{"id": INT, "product_id": INT, "quantity": INT, "price": FLOAT, "name": STRING, "model": STRING, "year": INT, "image": STRING}] }]` |
+Users can view their orders , cancel them before shipped or change the status of the item that they sold .
+
+![Manage order](./react-vite/public/orders.png)
+
+### Auth Endpoints
+
+Method | Endpoint | Description | Request Body (JSON) | Response
+--------|---------|-------------|--------------------- |---------
+**GET** | `/auth/` | Authenticates a user. | None | **If authenticated:** `{ "id": 1, "username": "user1", "email": "user1@example.com" }`<br>**If not authenticated:** `{ "errors": { "message": "Unauthorized" } }` (401)
+**POST** | `/auth/login` | Logs a user in. | `{ "email": "user1@example.com", "password": "password123" }` | **If successful:** `{ "id": 1, "username": "user1", "email": "user1@example.com" }`<br>**If failed:** Form errors (401)
+**GET** | `/auth/logout` | Logs a user out. | None | `{ "message": "User logged out" }`
+**POST** | `/auth/signup` | Creates a new user and logs them in. | `{ "username": "user1", "email": "user1@example.com", "password": "password123" }` | **If successful:** `{ "id": 1, "username": "user1", "email": "user1@example.com" }`<br>**If failed:** Form errors (401)
+**GET** | `/auth/unauthorized` | Returns unauthorized JSON. | None | `{ "errors": { "message": "Unauthorized" } }` (401)
+
+---
+
+### Item Endpoints
+
+Method | Endpoint | Description | Request Body (JSON) | Response
+--------|---------|-------------|---------------------|----------
+**GET** | `/api/items/` | Get all items. | None | `[ { "id": 1, "name": "Jersey", "price": 50.99, ... }, ...]`
+**GET** | `/api/items/<int:id>` | Get a specific item by ID. | None | `{ "id": 1, "name": "Jersey", "price": 50.99, ... }`<br>or `{ "message": "Item not found" }` (404)
+**GET** | `/api/items/current` | Get items owned by the current user. | None | `{ "items": [ { "id": 1, "name": "Jersey", ... }, ...] }`<br>or `{ "message": "No items found" }`
+**POST** | `/api/items/new` | Create a new item. | `{ "name": "Jersey", "description": "A cool jersey", "price": 50.99, "category": "Sports", "condition": "NEW", "size": "M", "item_status": "available", "image": file }` | `{ "id": 1, "name": "Jersey", ... }` (201)<br>or `{ "errors": { "name": "This field is required" } }` (400)
+**PUT** | `/api/items/<int:id>/update` | Update an item. | `{ "name": "Updated Jersey", "description": "Updated description", "price": 55.99, "category": "Sports", "condition": "NEW", "size": "M", "item_status": "available", "image": file }` | `{ "id": 1, "name": "Updated Jersey", ... }` (200)<br>or `{ "error": "Item not found" }` (404)<br>or `{ "error": "Unauthorized to update this item" }` (403)
+**DELETE** | `/api/items/<int:id>/delete` | Delete an item. | None | `{ "message": "Item successfully deleted" }` (200)<br>or `{ "errors": ["Item not found"] }` (404)<br>or `{ "error": "Unauthorized to delete this item" }` (403)
+
+---
+
+### Review Endpoints
+
+Method | Endpoint | Description | Request Body (JSON) | Response
+--------|---------|-------------|---------------------|----------
+**GET** | `/api/items/<int:id>/reviews` | Get reviews for a specific item. | None | `[ { "id": 1, "rating": 5, "comment": "Great product!", "user_name": "JohnDoe" }, ...]` (200)<br>or `{ "message": "No reviews yet" }` (404)
+**POST** | `/api/items/<int:id>/reviews` | Add a review to an item. | `{ "rating": 5, "comment": "Great product!" }` | `{ "id": 1, "rating": 5, "comment": "Great product!", "user_id": 2, ... }` (201)<br>or `{ "message": "Item not found" }` (404)<br>or `{ "errors": { "rating": "This field is required" } }` (400)
+**PUT** | `/reviews/<int:id>` | Update a review (only by the user who created it). | `{ "comment": "Updated comment", "rating": 5 }` | `{ "id": 1, "comment": "Updated comment", "rating": 5, ... }` (200)<br>or `{ "message": "Review not found" }` (404)<br>or `{ "message": "You can only update your own reviews" }` (403)
+**DELETE** | `/reviews/<int:id>` | Delete a review (only by the user who created it). | None | `{ "message": "Review deleted successfully" }` (200)<br>or `{ "message": "Review not found" }` (404)<br>or `{ "message": "Unauthorized" }` (403)
+
+---
+
+### Cart Endpoints
+
+Method | Endpoint | Description | Request Body (JSON) | Response
+--------|---------|-------------|---------------------|----------
+**GET** | `/cart/` | View current user's cart. | None | `{ "message": "Your cart is empty." }` (200)<br>or `[ { "id": 1, "user_id": 1, "item_id": 1, "quantity": 2, "item": { "id": 1, "name": "Item 1", ... } }, ...]` (200)
+**POST** | `/cart/` | Add item to the cart. | `{ "item_id": 1, "quantity": 2 }` | `{ "id": 1, "user_id": 1, "item_id": 1, "quantity": 2, ... }` (201)<br>or `{ "message": "Item not found." }` (404)
+
+---
+
+### Order Endpoints
+
+Method | Endpoint | Description | Request Body (JSON) | Response
+--------|---------|-------------|---------------------|----------
+**GET** | `/orders/` | List orders (buyer or seller). | None | `[ { "id": 1, "user_id": 1, "total": 100.0, "order_status": "PENDING", "order_items": [ { "id": 1, "item_id": 1, "quantity": 2, "price": 50.0, "item": { "id": 1, "name": "Item 1", ... } } ] } ]` (200)
+**POST** | `/orders/checkout` | Create a new order (checkout). | None | `{ "order": { "id": 1, "user_id": 1, "total": 100.0, "order_status": "PENDING", ... }, "sold_items": [ { "id": 1, "name": "Item 1", ... } ] }` (201)<br>or `{ "message": "Your cart is empty." }` (400)
+
 
 # Feature List
-1. Advanced search options to filter cars by make, model, year, price, etc.
-2. Responsive Design
+1. Advanced search options to filter items by category, store , condition , size , availability
+2. 
 
 # Feature Implementation Goals
-1. Enhanced Search Functionality
+1. ChatHelpBot (websockets)
 2. Diverse Payment System Integration
-3. Develop a feedback feature where users can include photos in their car reviews
+3. Real-time notifications

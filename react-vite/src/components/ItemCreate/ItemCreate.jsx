@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createItem } from "../../redux/items";
 import { useNavigate } from "react-router-dom";
 import './ItemCreate.css'; // Importing the CSS file for styles
 
