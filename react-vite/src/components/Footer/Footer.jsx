@@ -14,7 +14,14 @@ function Footer() {
 
         <div className="team-section">
           <div className="team-member">
-            <h4>Created by Burak Ozdemir</h4>
+
+            <h3>Created By</h3>
+          <a
+								href='https://burakoncuy.github.io/'
+								target='_blank'
+								rel='noopener noreferrer'>
+								 <h4> Burak Ozdemir</h4>
+							</a>
             <div className="social-links">
               <a href="https://github.com/burakoncuy">
                 <RxGithubLogo />

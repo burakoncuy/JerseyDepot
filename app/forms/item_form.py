@@ -2,6 +2,9 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, DecimalField, SelectField, SubmitField
 from wtforms.validators import DataRequired, NumberRange
 from ..models.item import CategoryType, ConditionType, SizeType, ItemStatusType
+from app.api.aws_helper import ALLOWED_EXTENSIONS
+from flask_wtf.file import FileField, FileAllowed, FileRequired
+
 
 class ItemForm(FlaskForm):
     # Fields for the Item model
@@ -24,8 +27,9 @@ class ItemForm(FlaskForm):
     )
     
     # Input for image URL
-    image_url = StringField('Image URL', validators=[DataRequired()])
-    
+    # image_url = StringField('Image URL', validators=[DataRequired()])
+    image = FileField("Image File", validators=[FileRequired(), FileAllowed(list(ALLOWED_EXTENSIONS))])
+
     # Dropdown for SizeType enum
     size = SelectField(
         'Size',

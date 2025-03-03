@@ -79,21 +79,19 @@ export const createItem = (itemData) => async (dispatch) => {
   
 
 // Update an item
-  export const updateItem = (id, itemData) => async (dispatch) => {
-    try {
+export const updateItem = (id, itemData) => async (dispatch) => {
+  try {
       const res = await fetch(`/api/items/${id}/update`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(itemData),
+          method: 'PUT',
+          body: itemData, // Do NOT manually set headers for FormData
       });
       const data = await res.json();
       dispatch({ type: UPDATE_ITEM, payload: data });
-    } catch (err) {
+  } catch (err) {
       console.error("Error updating item:", err);
-    }
-  };
+  }
+};
+
   
 
 

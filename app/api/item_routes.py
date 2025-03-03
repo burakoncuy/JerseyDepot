@@ -10,6 +10,7 @@ from ..models.db import db
 from datetime import datetime
 from ..forms.item_form import ItemForm
 from ..forms.review_form import ReviewForm
+from ..api.aws_helper import get_unique_filename,upload_file_to_s3
 
 item_routes = Blueprint("items", __name__)
 
@@ -49,17 +50,30 @@ def create_item():
     form.csrf_token.data = request.cookies.get('csrf_token')  # Get CSRF token
 
     if form.validate_on_submit():
+        # Handle image file upload
+        image = form.image.data
+        if image:
+            filename = get_unique_filename(image.filename)
+            image_url = upload_file_to_s3(image)
+            if "errors" in image_url:
+                return image_url  # Return the error message if upload failed
+
+            image_url = image_url["url"]
+        else:
+            image_url = None  # Set to None if no image uploaded
+
         new_item = Item(
-            user_id=current_user.id,  # This will work only if user is logged in
+            user_id=current_user.id,  # This will work only if the user is logged in
             name=form.name.data,
             description=form.description.data,
             price=form.price.data,
             category=form.category.data,
             condition=form.condition.data,
-            image_url=form.image_url.data,
+            image_url=image_url,
             size=form.size.data,
             item_status=form.item_status.data
         )
+
         db.session.add(new_item)
         db.session.commit()
         return new_item.to_dict(), 201  # Return created item
@@ -78,24 +92,37 @@ def update_item(id):
     if item.user_id != current_user.id:
         return {"error": "Unauthorized to update this item"}, 403
 
-    form = ItemForm()
-    form.csrf_token.data = request.cookies.get('csrf_token')  # Get CSRF token
+    # Get data from request form
+    name = request.form.get("name")
+    description = request.form.get("description")
+    price = request.form.get("price")
+    category = request.form.get("category")
+    condition = request.form.get("condition")
+    size = request.form.get("size")
+    item_status = request.form.get("item_status")
 
-    if form.validate_on_submit():
-        item.name = form.name.data
-        item.description = form.description.data
-        item.price = form.price.data
-        item.category = form.category.data
-        item.condition = form.condition.data
-        item.image_url = form.image_url.data
-        item.size = form.size.data
-        item.item_status = form.item_status.data
-        item.updated_at = datetime.utcnow()  # Update timestamp
+    # Handle image file upload
+    image = request.files.get("image")  # Fetch file from request
 
-        db.session.commit()
-        return item.to_dict(), 200  # Return updated item
+    if image:
+        filename = get_unique_filename(image.filename)
+        image_url = upload_file_to_s3(image)  # Upload to S3
+        if "errors" in image_url:
+            return image_url  # Return error if upload fails
+        item.image_url = image_url["url"]  # Update item image URL
 
-    return {"errors": form.errors}, 400
+    # Update other item fields
+    item.name = name
+    item.description = description
+    item.price = price
+    item.category = category
+    item.condition = condition
+    item.size = size
+    item.item_status = item_status
+    item.updated_at = datetime.utcnow()
+
+    db.session.commit()
+    return item.to_dict(), 200
 
 
 ##Delete an item
