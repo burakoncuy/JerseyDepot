@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCart, removeFromCart} from '../../redux/cart';
+import { fetchCart, removeFromCart, updateCartItem } from '../../redux/cart'; // Assuming you have an action for updating cart items
 import { checkout } from '../../redux/orders';
 import './Cart.css'; // Importing the CSS file for styles
 
@@ -22,10 +22,11 @@ const Cart = () => {
     dispatch(removeFromCart(itemId));
   };
 
-  // const handleUpdateQuantity = (itemId, quantity) => {
-  //   if (quantity < 1) return;
-  //   dispatch(updateCartItem(itemId, quantity));
-  // };
+  // Handle increasing/decreasing item quantity
+  const handleQuantityChange = (itemId, quantity) => {
+    if (quantity < 1) return; // Prevent going below 1
+    dispatch(updateCartItem(itemId, quantity));
+  };
 
   if (loading) {
     return <div className="cart__loading-message">Loading your cart...</div>;
@@ -64,6 +65,25 @@ const Cart = () => {
             <div className="cart__item-info">
               <p className="cart__item-name">{item.item.name} - ${item.item.price}</p>
               <div className="cart__item-actions">
+                {/* Show quantity controls for NEW items */}
+                {item.item.condition === 'NEW' && (
+                  <div className="cart__quantity-selector">
+                    <button 
+                      onClick={() => handleQuantityChange(item.item_id, item.quantity - 1)} 
+                      disabled={item.quantity <= 1}
+                      className="cart__quantity-btn"
+                    >
+                      -
+                    </button>
+                    <span>{item.quantity}</span>
+                    <button 
+                      onClick={() => handleQuantityChange(item.item_id, item.quantity + 1)} 
+                      className="cart__quantity-btn"
+                    >
+                      +
+                    </button>
+                  </div>
+                )}
                 <button 
                   onClick={() => handleRemoveItem(item.item_id)} 
                   className="cart__remove-button"
@@ -85,7 +105,7 @@ const Cart = () => {
         disabled={cartItems.length === 0}
         className="cart__checkout-button"
       >
-        Proceed to Checkout
+        Place Order
       </button>
     </div>
   );
