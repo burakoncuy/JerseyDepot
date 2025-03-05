@@ -46,9 +46,9 @@ const ItemDetail = () => {
     }
   };
 
-  const handleAddReview = () => {
-    navigate(`/items/${item.id}/reviews`);
-  };
+  // const handleAddReview = () => {
+  //   navigate(`/items/${item.id}/reviews`);
+  // };
 
   const increaseQuantity = () => setQuantity(prev => prev + 1);
   const decreaseQuantity = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
